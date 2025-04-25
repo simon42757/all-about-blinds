@@ -21,14 +21,15 @@ export default function LoginScreen() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-navy-500 p-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">
-            <span className="text-primary-500">all about</span>
-            <span className="text-primary-900">blinds</span>
+          <h1 className="mb-2">
+            <span className="text-pink-500 text-xl font-bold">All About...</span>
+            <br />
+            <span className="text-navy-500 text-3xl font-bold">Blinds</span>
           </h1>
-          <p className="text-gray-600">Enter your password to access the application</p>
+          <p className="text-gray-600 mt-4">Enter your password to access the application</p>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-6">
