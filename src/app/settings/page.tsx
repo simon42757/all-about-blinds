@@ -1,0 +1,153 @@
+'use client';
+
+import { useState } from 'react';
+import Link from 'next/link';
+import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff } from 'react-icons/fa';
+
+export default function Settings() {
+  const [darkMode, setDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState(true);
+  
+  return (
+    <main className="container mx-auto px-4 py-6 max-w-md">
+      <header className="flex items-center mb-6">
+        <Link href="/" className="text-gray-600 mr-4">
+          <FaArrowLeft />
+        </Link>
+        <h1 className="text-xl font-bold text-gray-900">Settings</h1>
+      </header>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaUser className="mr-2" /> User Profile
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+              Your Name
+            </label>
+            <input 
+              type="text" 
+              id="name"
+              className="input-field" 
+              placeholder="Enter your name"
+              defaultValue="Admin User"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address
+            </label>
+            <input 
+              type="email" 
+              id="email"
+              className="input-field" 
+              placeholder="Enter your email address"
+              defaultValue="admin@blindsbusiness.com"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaStore className="mr-2" /> Business Details
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          <div>
+            <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-1">
+              Business Name
+            </label>
+            <input 
+              type="text" 
+              id="businessName"
+              className="input-field" 
+              placeholder="Your business name"
+              defaultValue="Perfect Blinds Ltd."
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="businessPhone" className="block text-sm font-medium text-gray-700 mb-1">
+              Business Phone
+            </label>
+            <input 
+              type="tel" 
+              id="businessPhone"
+              className="input-field" 
+              placeholder="Business phone number"
+              defaultValue="01234 567890"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="businessEmail" className="block text-sm font-medium text-gray-700 mb-1">
+              Business Email
+            </label>
+            <input 
+              type="email" 
+              id="businessEmail"
+              className="input-field" 
+              placeholder="Business email address"
+              defaultValue="info@perfectblinds.com"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="vatNumber" className="block text-sm font-medium text-gray-700 mb-1">
+              VAT Number
+            </label>
+            <input 
+              type="text" 
+              id="vatNumber"
+              className="input-field" 
+              placeholder="VAT registration number"
+              defaultValue="GB123456789"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaCog className="mr-2" /> App Settings
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium text-gray-900">Dark Mode</h3>
+              <p className="text-sm text-gray-500">Use dark theme for the app</p>
+            </div>
+            <button 
+              onClick={() => setDarkMode(!darkMode)}
+              className={`${darkMode ? 'text-primary-600' : 'text-gray-400'} text-xl`}
+            >
+              {darkMode ? <FaToggleOn /> : <FaToggleOff />}
+            </button>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium text-gray-900">Notifications</h3>
+              <p className="text-sm text-gray-500">Enable push notifications</p>
+            </div>
+            <button 
+              onClick={() => setNotifications(!notifications)}
+              className={`${notifications ? 'text-primary-600' : 'text-gray-400'} text-xl`}
+            >
+              {notifications ? <FaToggleOn /> : <FaToggleOff />}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button className="btn-primary w-full flex items-center justify-center">
+        <FaSave className="mr-2" /> Save Settings
+      </button>
+    </main>
+  );
+}
