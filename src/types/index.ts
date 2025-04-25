@@ -35,9 +35,12 @@ export interface Contact {
 
 export interface Survey {
   id: string;
-  brief: string;
+  brief?: string;
   date: string;
-  time: string;
+  time?: string;
+  surveyorName?: string;
+  findings?: string;
+  followUpActions?: string;
   aoi?: string;
 }
 
@@ -45,6 +48,10 @@ export interface Task {
   id: string;
   description: string;
   cost: number;
+  status?: string;
+  dueDate?: string;
+  assignedTo?: string;
+  notes?: string;
   aoi?: string;
 }
 
