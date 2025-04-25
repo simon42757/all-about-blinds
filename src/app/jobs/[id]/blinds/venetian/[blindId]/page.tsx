@@ -7,15 +7,7 @@ import { FaArrowLeft, FaEdit, FaTrash, FaCopy } from 'react-icons/fa';
 import { VenetianBlind } from '@/types';
 import ConfirmationModal from '@/components/ConfirmationModal';
 
-// This function is required for static site generation with dynamic routes
-export function generateStaticParams() {
-  // For static export, we need to provide all possible parameter combinations
-  return [
-    { id: 'JOB001', blindId: 'VN001' },
-    { id: 'JOB002', blindId: 'VN002' },
-    { id: 'JOB003', blindId: 'VN003' },
-  ];
-}
+
 
 // Mock data function - in a real app, this would fetch from an API
 const fetchBlindData = (jobId: string, blindId: string): Promise<VenetianBlind> => {
