@@ -1,6 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+// This function is required for static site generation with dynamic routes
+export function generateStaticParams() {
+  // For static export, we need to provide all possible parameter combinations
+  return [
+    { id: 'JOB001' },
+    { id: 'JOB002' },
+    { id: 'JOB003' },
+  ];
+}
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Formik, Form, Field, ErrorMessage } from 'formik';

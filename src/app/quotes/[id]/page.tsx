@@ -1,6 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+// This function is required for static site generation with dynamic routes
+export function generateStaticParams() {
+  // For static export, we need to provide all possible parameter combinations
+  return [
+    { id: 'QUOTE001' },
+    { id: 'QUOTE002' },
+    { id: 'QUOTE003' },
+  ];
+}
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaEdit, FaFilePdf, FaEnvelope, FaPrint } from 'react-icons/fa';

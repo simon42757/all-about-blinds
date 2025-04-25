@@ -1,6 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+
+// This function is required for static site generation with dynamic routes
+export function generateStaticParams() {
+  return [
+    { id: 'JOB001' },
+    { id: 'JOB002' },
+    { id: 'JOB003' },
+  ];
+}
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaPhone, FaEnvelope, FaStar } from 'react-icons/fa';

@@ -1,0 +1,23 @@
+GitHub Pages Deployment Instructions:
+
+1. Connect your local repository to GitHub:
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY_NAME.git
+   git branch -M main
+   git push -u origin main
+
+   Replace YOUR_USERNAME with your GitHub username and YOUR_REPOSITORY_NAME with the name you chose for your repository.
+
+2. Set up GitHub Pages:
+   - Go to your GitHub repository
+   - Click on "Settings"
+   - Scroll down to the "GitHub Pages" section
+   - For Source, select "GitHub Actions"
+
+3. GitHub Actions will automatically build and deploy your site based on the workflow file we added.
+
+4. After deployment (which takes a few minutes), your site will be available at:
+   https://YOUR_USERNAME.github.io/YOUR_REPOSITORY_NAME/
+
+5. You can access this URL from your Android phone or any other device with a web browser!
+
+Note: Any time you push changes to your repository, GitHub Actions will automatically rebuild and redeploy your site.
