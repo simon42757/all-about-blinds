@@ -1,14 +1,5 @@
-// PDF Generation Utility using jsPDF
-import { jsPDF } from 'jspdf';
+// PDF Generation Utility using dynamic imports to ensure client-side only execution
 import { Job } from '@/types';
-import 'jspdf-autotable';
-
-// Extend the jsPDF type to include autoTable
-declare module 'jspdf' {
-  interface jsPDF {
-    autoTable: (options: any) => jsPDF;
-  }
-}
 
 // Function to format currency
 const formatCurrency = (amount: number): string => {
@@ -21,7 +12,11 @@ const formatCurrency = (amount: number): string => {
 };
 
 // Generate job quote PDF
-export const generateJobQuotePdf = (job: Job): jsPDF => {
+export const generateJobQuotePdf = async (job: Job): Promise<any> => {
+  // Only import jsPDF and the autotable plugin on the client side
+  const { jsPDF } = await import('jspdf');
+  await import('jspdf-autotable');
+  
   const doc = new jsPDF();
   
   // Add logo and header
@@ -99,7 +94,7 @@ export const generateJobQuotePdf = (job: Job): jsPDF => {
   if (blindsData.length > 0) {
     doc.text('BLINDS', 20, 140);
     
-    doc.autoTable({
+    (doc as any).autoTable({
       startY: 145,
       head: [['Type', 'Location', 'Dimensions', 'Qty', 'Unit Price', 'Total']],
       body: blindsData,
@@ -128,11 +123,11 @@ export const generateJobQuotePdf = (job: Job): jsPDF => {
   });
   
   if (tasksData.length > 0) {
-    const finalY = (doc as any).lastAutoTable.finalY || 160;
+    const finalY = (doc as any).lastAutoTable?.finalY || 160;
     
     doc.text('ADDITIONAL SERVICES', 20, finalY + 10);
     
-    doc.autoTable({
+    (doc as any).autoTable({
       startY: finalY + 15,
       head: [['Description', 'Cost']],
       body: tasksData,
@@ -152,7 +147,7 @@ export const generateJobQuotePdf = (job: Job): jsPDF => {
   
   // Add cost summary
   const { costSummary } = job;
-  const finalY = (doc as any).lastAutoTable ? (doc as any).lastAutoTable.finalY + 15 : 200;
+  const finalY = (doc as any).lastAutoTable?.finalY ? (doc as any).lastAutoTable.finalY + 15 : 200;
   
   // Calculate costs
   const blindsCost = [...job.rollerBlinds, ...job.verticalBlinds, ...job.venetianBlinds]
@@ -217,7 +212,11 @@ export const generateJobQuotePdf = (job: Job): jsPDF => {
 };
 
 // Generate job invoice PDF
-export const generateJobInvoicePdf = (job: Job): jsPDF => {
+export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
+  // Only import jsPDF and the autotable plugin on the client side
+  const { jsPDF } = await import('jspdf');
+  await import('jspdf-autotable');
+  
   const doc = new jsPDF();
   // Similar implementation as quote but with invoice-specific details
   // For now, we'll use the same template but change the title to INVOICE
@@ -253,6 +252,6 @@ export const generateJobInvoicePdf = (job: Job): jsPDF => {
 };
 
 // Save PDF to file system (for web, this would trigger a download)
-export const savePdf = (doc: jsPDF, filename: string): void => {
+export const savePdf = async (doc: any, filename: string): Promise<void> => {
   doc.save(filename);
 };

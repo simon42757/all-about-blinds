@@ -157,11 +157,11 @@ export default function QuoteDetails() {
     
     setGenerating(true);
     try {
-      // Generate the PDF
-      const doc = generateJobQuotePdf(quoteData.job);
+      // Generate the PDF - note the await since this is now async
+      const doc = await generateJobQuotePdf(quoteData.job);
       
-      // Save the PDF with a filename
-      savePdf(doc, `Quote_${quoteData.id}_${quoteData.job.name.replace(/\s+/g, '_')}.pdf`);
+      // Save the PDF with a filename - also async now
+      await savePdf(doc, `Quote_${quoteData.id}_${quoteData.job.name.replace(/\s+/g, '_')}.pdf`);
     } catch (error) {
       console.error('Error generating PDF:', error);
     } finally {
