@@ -1,11 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { sha256 } from 'js-sha256';
 
-// The default password hash - this would be replaced with an environment variable in production
-// This is the hash of "allaboutblinds2025" - you should change this to your preferred password
-const DEFAULT_PASSWORD_HASH = '8a1a7e50de5dbbf85f9a8866ca62daee8f3fd1f4e5eae69fc8d88e86dea2b744';
+// The default password - this is a simple approach for testing
+const DEFAULT_PASSWORD = 'allaboutblinds';
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -45,13 +43,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (password: string): boolean => {
     setError(null);
     
-    // Hash the input password and compare with stored hash
-    const hashedInput = sha256(password);
+    // Simple password check for initial testing
+    const correctPassword = process.env.NEXT_PUBLIC_APP_PASSWORD || DEFAULT_PASSWORD;
     
-    // Get the password hash from environment variable or use default
-    const passwordHash = process.env.NEXT_PUBLIC_HASHED_APP_PASSWORD || DEFAULT_PASSWORD_HASH;
-    
-    if (hashedInput === passwordHash) {
+    if (password === correctPassword) {
       // Set authenticated state
       setIsAuthenticated(true);
       
