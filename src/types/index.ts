@@ -21,13 +21,15 @@ export interface Job {
 export interface Contact {
   id: string;
   name: string;
-  organisation: string;
-  address: string;
-  area: string;
-  postcode: string;
-  phone: string;
-  email: string;
-  isMainContact: boolean;
+  organisation?: string;
+  address?: string;
+  area?: string;
+  postcode?: string;
+  phone?: string;
+  email?: string;
+  isMainContact?: boolean;
+  role?: string;
+  notes?: string;
   aoi?: string;
 }
 
