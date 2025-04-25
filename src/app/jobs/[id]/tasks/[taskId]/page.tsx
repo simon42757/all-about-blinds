@@ -45,7 +45,11 @@ const formatCurrency = (amount: number): string => {
 };
 
 // Get status badge styling
-const getStatusBadge = (status: string): { text: string, classes: string } => {
+const getStatusBadge = (status: string | undefined): { text: string, classes: string } => {
+  if (!status) {
+    return { text: 'Unknown', classes: 'bg-gray-100 text-gray-800' };
+  }
+  
   switch (status) {
     case 'pending':
       return { text: 'Pending', classes: 'bg-yellow-100 text-yellow-800' };
