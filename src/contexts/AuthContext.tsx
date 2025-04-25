@@ -5,6 +5,11 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 // The default password - this is a simple approach for testing
 const DEFAULT_PASSWORD = 'allaboutblinds';
 
+// Initialize the password in localStorage if it doesn't exist
+if (typeof window !== 'undefined' && !localStorage.getItem('app_password')) {
+  localStorage.setItem('app_password', DEFAULT_PASSWORD);
+}
+
 type AuthContextType = {
   isAuthenticated: boolean;
   login: (password: string) => boolean;
@@ -43,8 +48,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (password: string): boolean => {
     setError(null);
     
-    // Simple password check for initial testing
-    const correctPassword = process.env.NEXT_PUBLIC_APP_PASSWORD || DEFAULT_PASSWORD;
+    // Get password from localStorage or fallback to default
+    const correctPassword = typeof window !== 'undefined' ? 
+      (localStorage.getItem('app_password') || DEFAULT_PASSWORD) : 
+      DEFAULT_PASSWORD;
     
     if (password === correctPassword) {
       // Set authenticated state

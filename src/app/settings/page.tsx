@@ -2,12 +2,69 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff } from 'react-icons/fa';
+import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey } from 'react-icons/fa';
+import { useAuth } from '@/contexts/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function Settings() {
   const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState(true);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
+  const { logout } = useAuth();
+  const router = useRouter();
   
+  const handleChangePassword = () => {
+    // Clear previous messages
+    setPasswordError('');
+    setPasswordSuccess('');
+    
+    // Validate input
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordError('All password fields are required');
+      return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+      setPasswordError('New passwords do not match');
+      return;
+    }
+    
+    // Get current password from localStorage or environment variable
+    const storedPassword = localStorage.getItem('app_password') || 'allaboutblinds';
+    
+    if (currentPassword !== storedPassword) {
+      setPasswordError('Current password is incorrect');
+      return;
+    }
+    
+    // Save the new password to localStorage
+    localStorage.setItem('app_password', newPassword);
+    
+    // Show success message
+    setPasswordSuccess('Password changed successfully. You will need to log in again.');
+    
+    // Clear form
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+    
+    // Log out after 3 seconds
+    setTimeout(() => {
+      logout();
+      router.push('/');
+    }, 3000);
+  };
+  
+  const handleSaveSettings = () => {
+    // Save other settings
+    // This is just a placeholder since we don't have actual settings storage yet
+    alert('Settings saved successfully!');
+  };
+
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
@@ -145,7 +202,84 @@ export default function Settings() {
         </div>
       </div>
 
-      <button className="btn-primary w-full flex items-center justify-center">
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaKey className="mr-2" /> Change Password
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          {passwordSuccess && (
+            <div className="p-3 bg-green-100 text-green-800 rounded-md text-sm">
+              {passwordSuccess}
+            </div>
+          )}
+          
+          {passwordError && (
+            <div className="p-3 bg-red-100 text-red-800 rounded-md text-sm">
+              {passwordError}
+            </div>
+          )}
+          
+          <div>
+            <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 mb-1">
+              Current Password
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FaLock className="text-gray-400" />
+              </div>
+              <input 
+                type="password" 
+                id="currentPassword"
+                className="input-field pl-10 w-full" 
+                placeholder="Enter current password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
+              New Password
+            </label>
+            <input 
+              type="password" 
+              id="newPassword"
+              className="input-field" 
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+              Confirm New Password
+            </label>
+            <input 
+              type="password" 
+              id="confirmPassword"
+              className="input-field" 
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+          
+          <button 
+            onClick={handleChangePassword}
+            className="btn-primary-outline w-full"
+          >
+            Change Password
+          </button>
+        </div>
+      </div>
+
+      <button 
+        onClick={handleSaveSettings}
+        className="btn-primary w-full flex items-center justify-center"
+      >
         <FaSave className="mr-2" /> Save Settings
       </button>
     </main>
