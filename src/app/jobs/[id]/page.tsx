@@ -3,8 +3,8 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaCalculator, FaEdit, FaFilePdf } from 'react-icons/fa';
-import { generateJobQuotePdf, savePdf } from '@/utils/pdfUtils';
+import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaCalculator, FaEdit } from 'react-icons/fa';
+import PdfGeneratorButton from '@/components/PdfGeneratorButton';
 import { Job } from '@/types';
 
 // Mock data function - in a real app, this would fetch from an API
@@ -152,7 +152,6 @@ export default function JobDetails() {
   
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
-  const [generatingPdf, setGeneratingPdf] = useState(false);
 
   const loadJob = async () => {
     try {
@@ -162,25 +161,6 @@ export default function JobDetails() {
       console.error('Error loading job:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleGenerateQuote = async () => {
-    if (!job) return;
-    
-    try {
-      setGeneratingPdf(true);
-      
-      // Generate and save the PDF
-      const pdfDoc = await generateJobQuotePdf(job);
-      if (pdfDoc) {
-        savePdf(pdfDoc, `quote-${job.id.toLowerCase()}.pdf`);
-      }
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('There was an error generating the PDF. Please try again.');
-    } finally {
-      setGeneratingPdf(false);
     }
   };
 
@@ -305,21 +285,7 @@ export default function JobDetails() {
       </div>
       
       <div className="mt-6">
-        <button 
-          onClick={handleGenerateQuote}
-          disabled={generatingPdf}
-          className="card w-full flex justify-between items-center p-4 cursor-pointer transition-colors hover:bg-gray-50"
-        >
-          <div className="flex items-center">
-            <FaFilePdf className="text-2xl text-red-600 mr-3" />
-            <span className="font-medium">Generate Quote PDF</span>
-          </div>
-          {generatingPdf ? (
-            <span className="text-sm text-gray-500">Generating...</span>
-          ) : (
-            <span className="text-sm text-primary-600">Click to download</span>
-          )}
-        </button>
+        <PdfGeneratorButton job={job} />
       </div>
     </main>
   );
