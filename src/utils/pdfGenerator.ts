@@ -1,6 +1,9 @@
 // PDF Generation Utility using dynamic imports to ensure client-side only execution
 import { Job } from '@/types';
 
+// Check if we're on the client side
+const isClient = typeof window !== 'undefined';
+
 // Function to format currency
 const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('en-GB', {
@@ -13,9 +16,21 @@ const formatCurrency = (amount: number): string => {
 
 // Generate job quote PDF
 export const generateJobQuotePdf = async (job: Job): Promise<any> => {
+  if (!isClient) {
+    console.error('PDF generation is only available on the client side');
+    return null;
+  }
+
+  let jsPDF;
   // Only import jsPDF and the autotable plugin on the client side
-  const { jsPDF } = await import('jspdf');
-  await import('jspdf-autotable');
+  try {
+    const jsPDFModule = await import('jspdf');
+    jsPDF = jsPDFModule.default || jsPDFModule.jsPDF;
+    await import('jspdf-autotable');
+  } catch (error) {
+    console.error('Error importing PDF libraries:', error);
+    throw error;
+  }
   
   const doc = new jsPDF();
   
@@ -253,5 +268,20 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
 
 // Save PDF to file system (for web, this would trigger a download)
 export const savePdf = async (doc: any, filename: string): Promise<void> => {
-  doc.save(filename);
+  if (!isClient) {
+    console.error('PDF saving is only available on the client side');
+    return;
+  }
+
+  if (!doc) {
+    console.error('No PDF document provided to save');
+    throw new Error('No PDF document provided');
+  }
+
+  try {
+    doc.save(filename);
+  } catch (error) {
+    console.error('Error saving PDF:', error);
+    throw error;
+  }
 };

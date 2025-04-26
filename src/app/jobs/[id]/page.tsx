@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaCalculator, FaEdit, FaFilePdf } from 'react-icons/fa';
-import { generateJobQuotePdf, savePdf } from '@/utils/pdfGenerator';
+import { generateJobQuotePdf, savePdf } from '@/utils/pdfUtils';
 import { Job } from '@/types';
 
 // Mock data function - in a real app, this would fetch from an API
@@ -170,8 +170,12 @@ export default function JobDetails() {
     
     try {
       setGeneratingPdf(true);
+      
+      // Generate and save the PDF
       const pdfDoc = await generateJobQuotePdf(job);
-      await savePdf(pdfDoc, `quote-${job.id.toLowerCase()}.pdf`);
+      if (pdfDoc) {
+        savePdf(pdfDoc, `quote-${job.id.toLowerCase()}.pdf`);
+      }
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('There was an error generating the PDF. Please try again.');
