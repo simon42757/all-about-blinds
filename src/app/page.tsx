@@ -204,15 +204,11 @@ export default function Home() {
 
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
-      {/* Brand Header with logo image */}
+      {/* Brand Header with text logo */}
       <div className="flex flex-col items-center mb-8 text-center">
-        <div className="w-64 h-32 mb-2">
-          <img 
-            src="/images/logo.svg" 
-            alt="All About Blinds Logo" 
-            className="w-full h-full object-contain" 
-          />
-        </div>
+        <h1 className="text-4xl font-bold tracking-tight">
+          <span className="text-primary-500">all about...</span> <span className="text-white">blinds</span>
+        </h1>
       </div>
 
       <header className="flex justify-between items-center mb-6">
