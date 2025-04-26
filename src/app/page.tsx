@@ -204,22 +204,15 @@ export default function Home() {
 
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
-      {/* Brand Header styled like the business card */}
+      {/* Brand Header with logo image */}
       <div className="flex flex-col items-center mb-8 text-center">
-        <div className="flex items-end mb-1">
-          <div className="mr-1">
-            <div className="text-primary-500 text-2xl font-bold leading-none">all</div>
-            <div className="text-primary-500 text-2xl font-bold leading-none">about...</div>
-          </div>
-          <div className="flex items-center">
-            <div className="flex flex-col">
-              {[1, 2, 3, 4].map((line) => (
-                <div key={line} className="h-1 w-8 bg-primary-500 mb-0.5"></div>
-              ))}
-            </div>
-          </div>
+        <div className="w-64 h-32 mb-2">
+          <img 
+            src="/images/logo.svg" 
+            alt="All About Blinds Logo" 
+            className="w-full h-full object-contain" 
+          />
         </div>
-        <h1 className="text-white text-4xl font-bold tracking-tight">blinds</h1>
       </div>
 
       <header className="flex justify-between items-center mb-6">
