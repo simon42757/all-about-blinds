@@ -1,5 +1,6 @@
 // PDF Generation Utility using dynamic imports to ensure client-side only execution
 import { Job } from '@/types';
+import { getCompanyLogo } from './logoUtils';
 
 // Check if we're on the client side
 const isClient = typeof window !== 'undefined';
@@ -37,6 +38,20 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
   // Add logo and header
   doc.setFillColor(0, 23, 85); // Navy blue
   doc.rect(0, 0, 210, 40, 'F');
+  
+  // Try to get the company logo
+  const logo = getCompanyLogo();
+  if (logo) {
+    try {
+      // Add the logo to the top right corner
+      const img = new Image();
+      img.src = logo;
+      doc.addImage(img, 'PNG', 120, 5, 70, 30, undefined, 'FAST');
+    } catch (error) {
+      console.error('Error adding logo to PDF:', error);
+      // Continue without the logo if there's an error
+    }
+  }
   
   doc.setTextColor(255, 0, 127); // Pink
   doc.setFont('helvetica', 'bold');
@@ -246,6 +261,20 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
       // Add logo and header
       doc.setFillColor(0, 23, 85); // Navy blue
       doc.rect(0, 0, 210, 40, 'F');
+      
+      // Try to get the company logo
+      const logo = getCompanyLogo();
+      if (logo) {
+        try {
+          // Add the logo to the top right corner
+          const img = new Image();
+          img.src = logo;
+          doc.addImage(img, 'PNG', 120, 5, 70, 30, undefined, 'FAST');
+        } catch (error) {
+          console.error('Error adding logo to PDF:', error);
+          // Continue without the logo if there's an error
+        }
+      }
       
       doc.setTextColor(255, 0, 127); // Pink
       doc.setFont('helvetica', 'bold');
@@ -538,6 +567,20 @@ export const generateJobReceiptPdf = async (job: Job): Promise<any> => {
       // Add logo and header
       doc.setFillColor(0, 23, 85); // Navy blue
       doc.rect(0, 0, 210, 40, 'F');
+      
+      // Try to get the company logo
+      const logo = getCompanyLogo();
+      if (logo) {
+        try {
+          // Add the logo to the top right corner
+          const img = new Image();
+          img.src = logo;
+          doc.addImage(img, 'PNG', 120, 5, 70, 30, undefined, 'FAST');
+        } catch (error) {
+          console.error('Error adding logo to PDF:', error);
+          // Continue without the logo if there's an error
+        }
+      }
       
       doc.setTextColor(255, 0, 127); // Pink
       doc.setFont('helvetica', 'bold');

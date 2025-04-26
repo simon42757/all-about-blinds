@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font } from '@react-pdf/renderer';
+import React, { useEffect, useState } from 'react';
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, Font, Image } from '@react-pdf/renderer';
+import { getCompanyLogo } from '@/utils/logoUtils';
 
 // Function to format currency
 const formatCurrency = (amount) => {
@@ -15,6 +16,21 @@ const formatCurrency = (amount) => {
 
 // Create styles
 const styles = StyleSheet.create({
+  logo: {
+    position: 'absolute',
+    top: 10,
+    right: 20,
+    width: 80,
+    objectFit: 'contain',
+  },
+  headerWithLogo: {
+    backgroundColor: '#00175a',
+    padding: 20,
+    paddingRight: 110, // Make space for the logo
+    marginBottom: 20,
+    marginHorizontal: -30,
+    marginTop: -30,
+  },
   page: {
     padding: 30,
     fontFamily: 'Helvetica',
@@ -122,7 +138,7 @@ const styles = StyleSheet.create({
 });
 
 // Create Document component
-const QuotePdfDocument = ({ job }) => {
+const QuotePdfDocument = ({ job, logo }) => {
   // Calculate totals
   const blindsCost = [...job.rollerBlinds, ...job.verticalBlinds, ...job.venetianBlinds]
     .reduce((sum, blind) => sum + (blind.cost * blind.quantity), 0);
@@ -141,9 +157,12 @@ const QuotePdfDocument = ({ job }) => {
     <Document>
       <Page size="A4" style={styles.page}>
         {/* Header with logo */}
-        <View style={styles.header}>
+        <View style={logo ? styles.headerWithLogo : styles.header}>
           <Text style={styles.brandText}>all about...</Text>
           <Text style={styles.headerText}>blinds</Text>
+          {logo && (
+            <Image src={logo} style={styles.logo} />
+          )}
         </View>
         
         {/* Title */}
@@ -277,11 +296,21 @@ const QuotePdfDocument = ({ job }) => {
 
 // PDF Download Link component that handles PDF generation and download
 const QuotePdfLink = ({ job }) => {
+  const [logo, setLogo] = useState(null);
+  
+  useEffect(() => {
+    // Load the logo from localStorage when component mounts
+    const savedLogo = getCompanyLogo();
+    if (savedLogo) {
+      setLogo(savedLogo);
+    }
+  }, []);
+  
   if (!job) return null;
   
   return (
     <PDFDownloadLink 
-      document={<QuotePdfDocument job={job} />} 
+      document={<QuotePdfDocument job={job} logo={logo} />} 
       fileName={`quote-${job.id.toLowerCase()}.pdf`}
       style={{
         textDecoration: 'none',
