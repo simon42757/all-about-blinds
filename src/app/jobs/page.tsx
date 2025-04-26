@@ -21,7 +21,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
     setTimeout(() => {
       resolve([
         {
-          id: 'JOB001',
+          id: 'AAB0001',
           name: 'Smith Residence',
           organisation: 'Smith Family',
           postcode: 'AB12 3CD',
@@ -29,7 +29,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
           status: 'active'
         },
         {
-          id: 'JOB002',
+          id: 'AAB0002',
           name: 'Johnson Office',
           organisation: 'Johnson Ltd',
           postcode: 'XY45 6ZA',
@@ -37,7 +37,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
           status: 'cancelled'
         },
         {
-          id: 'JOB003',
+          id: 'AAB0003',
           name: 'Westpark Hotel',
           organisation: 'Westpark Resorts',
           postcode: 'MN78 9KL',
@@ -45,7 +45,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
           status: 'completed'
         },
         {
-          id: 'JOB004',
+          id: 'AAB0004',
           name: 'Clarke Residence',
           organisation: 'Clarke Family',
           postcode: 'PQ12 3RS',
@@ -53,7 +53,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
           status: 'active'
         },
         {
-          id: 'JOB005',
+          id: 'AAB0005',
           name: 'Thompson Offices',
           organisation: 'Thompson Inc',
           postcode: 'TU34 5VW',
@@ -251,7 +251,7 @@ export default function JobsList() {
               onClick={() => handleJobClick(job.id)}
             >
               <div className="w-12 h-12 bg-primary-100 rounded-md flex items-center justify-center text-primary-800 font-medium">
-                {job.id.slice(-3)}
+                {job.id.slice(-4)}
               </div>
               <div className="ml-3 flex-1">
                 <div className="flex justify-between items-start">

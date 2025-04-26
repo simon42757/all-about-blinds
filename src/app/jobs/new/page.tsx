@@ -35,7 +35,7 @@ export default function NewJob() {
       console.log('Creating new job:', values);
       
       // For now, just create a job ID and redirect
-      const jobId = 'JOB' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+      const jobId = 'AAB' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
       
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 500));
