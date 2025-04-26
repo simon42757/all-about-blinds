@@ -34,7 +34,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
           organisation: 'Johnson Ltd',
           postcode: 'XY45 6ZA',
           date: '2025-04-18',
-          status: 'quote'
+          status: 'cancelled'
         },
         {
           id: 'JOB003',
@@ -117,8 +117,8 @@ export default function JobsList() {
       case 'completed':
         classes += ' bg-blue-100 text-blue-800';
         break;
-      case 'quote':
-        classes += ' bg-yellow-100 text-yellow-800';
+      case 'cancelled':
+        classes += ' bg-red-100 text-red-800';
         break;
       default:
         classes += ' bg-gray-100 text-gray-800';
@@ -220,8 +220,8 @@ export default function JobsList() {
           >
             <option value="all" className="text-gray-900 bg-white">All Status</option>
             <option value="active" className="text-gray-900 bg-white">Active</option>
-            <option value="quote" className="text-gray-900 bg-white">Quote</option>
             <option value="completed" className="text-gray-900 bg-white">Completed</option>
+            <option value="cancelled" className="text-gray-900 bg-white">Cancelled</option>
           </select>
         </div>
         

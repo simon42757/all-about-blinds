@@ -35,7 +35,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
           organisation: 'Johnson Ltd',
           postcode: 'XY45 6ZA',
           date: '2025-04-18',
-          status: 'quote'
+          status: 'cancelled'
         },
         {
           id: 'JOB003',
@@ -67,7 +67,7 @@ const fetchJobs = (): Promise<JobListItem[]> => {
           organisation: 'Urban Living',
           postcode: 'GH67 8JK',
           date: '2025-04-01',
-          status: 'quote'
+          status: 'cancelled'
         },
         {
           id: 'JOB007',
@@ -137,8 +137,8 @@ export default function Home() {
       case 'completed':
         classes += ' bg-blue-100 text-blue-800';
         break;
-      case 'quote':
-        classes += ' bg-yellow-100 text-yellow-800';
+      case 'cancelled':
+        classes += ' bg-red-100 text-red-800';
         break;
       default:
         classes += ' bg-gray-100 text-gray-800';
@@ -192,6 +192,7 @@ export default function Home() {
         ...jobToDuplicate,
         id: newJobId,
         name: `${jobToDuplicate.name} (Copy)`,
+        status: 'active', // Always set duplicated jobs to active status
         date: new Date().toISOString().split('T')[0], // Today's date
       };
       
@@ -261,8 +262,8 @@ export default function Home() {
             >
               <option value="all" className="text-gray-900 bg-white">All Status</option>
               <option value="active" className="text-gray-900 bg-white">Active</option>
-              <option value="quote" className="text-gray-900 bg-white">Quote</option>
               <option value="completed" className="text-gray-900 bg-white">Completed</option>
+              <option value="cancelled" className="text-gray-900 bg-white">Cancelled</option>
             </select>
           </div>
         </div>

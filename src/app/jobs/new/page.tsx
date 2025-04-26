@@ -147,8 +147,8 @@ export default function NewJob() {
                   className="input-field"
                 >
                   <option value="active">Active</option>
-                  <option value="quote">Quote</option>
                   <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
                 </Field>
               </div>
 
