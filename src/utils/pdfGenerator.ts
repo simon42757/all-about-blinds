@@ -473,7 +473,9 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
       }
       
       return doc;
-    } catch (innerError) {
+    } catch (error) {
+      // Type assertion to handle the error properties safely
+      const innerError = error as Error;
       console.error('Error while generating invoice content:', innerError);
       
       // Create a simple error invoice instead
@@ -662,13 +664,16 @@ export const generateJobReceiptPdf = async (job: Job): Promise<any> => {
       }
       
       return doc;
-    } catch (innerError) {
+    } catch (error) {
+      // Type assertion to handle the error properties safely
+      const innerError = error as Error;
+      
       // More detailed error logging to help diagnose the issue
       console.error('Error while generating receipt content:', innerError);
       console.error('Error details:', {
-        message: innerError.message || 'No error message', 
-        name: innerError.name || 'Unknown error type',
-        stack: innerError.stack || 'No stack trace',
+        message: innerError?.message || 'No error message', 
+        name: innerError?.name || 'Unknown error type',
+        stack: innerError?.stack || 'No stack trace',
         // Include the specific job properties that might be causing issues
         jobId: job?.id || 'No job ID',
         hasRollerBlinds: Array.isArray(job?.rollerBlinds),
@@ -808,7 +813,9 @@ export const generateEnvelopePdf = async (job: Job): Promise<any> => {
       doc.text(`Ref: ${id}`, 190, 140, { align: 'right' });
       
       return doc;
-    } catch (innerError) {
+    } catch (error) {
+      // Type assertion to handle the error properties safely
+      const innerError = error as Error;
       console.error('Error while generating envelope content:', innerError);
       
       // Create a simple error envelope instead
