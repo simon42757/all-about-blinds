@@ -162,7 +162,7 @@ export default function Settings() {
               id="address"
               className="input-field" 
               placeholder="Business address"
-              defaultValue=""
+              defaultValue="Unit 1, 43 Cremyll Road"
             />
           </div>
           
@@ -175,7 +175,7 @@ export default function Settings() {
               id="area"
               className="input-field" 
               placeholder="Area"
-              defaultValue=""
+              defaultValue="Torpoint"
             />
           </div>
           
@@ -188,7 +188,7 @@ export default function Settings() {
               id="postcode"
               className="input-field" 
               placeholder="Postcode"
-              defaultValue=""
+              defaultValue="PL11 2DY"
             />
           </div>
         </div>
@@ -267,9 +267,13 @@ export default function Settings() {
             </div>
             <button 
               onClick={() => setDarkMode(!darkMode)}
-              className={`${darkMode ? 'text-primary-600' : 'text-gray-400'} text-xl`}
+              className="text-xl"
+              aria-label="Toggle dark mode"
             >
-              {darkMode ? <FaToggleOn /> : <FaToggleOff />}
+              {darkMode ? 
+                <FaToggleOn className="text-primary-600" /> : 
+                <FaToggleOff className="text-gray-400" />
+              }
             </button>
           </div>
           
@@ -280,9 +284,13 @@ export default function Settings() {
             </div>
             <button 
               onClick={() => setNotifications(!notifications)}
-              className={`${notifications ? 'text-primary-600' : 'text-gray-400'} text-xl`}
+              className="text-xl"
+              aria-label="Toggle notifications"
             >
-              {notifications ? <FaToggleOn /> : <FaToggleOff />}
+              {notifications ? 
+                <FaToggleOn className="text-primary-600" /> : 
+                <FaToggleOff className="text-gray-400" />
+              }
             </button>
           </div>
         </div>
