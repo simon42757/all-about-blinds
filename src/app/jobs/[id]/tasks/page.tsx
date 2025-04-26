@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaTasks } from 'react-icons/fa';
 import { Task } from '@/types';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 // Mock data function - in a real app, this would fetch from an API
 const fetchTasks = (jobId: string): Promise<Task[]> => {
@@ -40,6 +41,8 @@ export default function TasksList() {
   
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const loadTasks = async () => {
@@ -56,9 +59,23 @@ export default function TasksList() {
     loadTasks();
   }, [jobId]);
 
-  const handleDeleteTask = (taskId: string) => {
-    // In a real app, this would call an API to delete the task
-    setTasks(tasks.filter(task => task.id !== taskId));
+  const promptDeleteTask = (taskId: string) => {
+    setTaskToDelete(taskId);
+    setShowDeleteConfirmation(true);
+  };
+  
+  const handleDeleteConfirm = () => {
+    if (taskToDelete) {
+      // In a real app, this would call an API to delete the task
+      setTasks(tasks.filter(task => task.id !== taskToDelete));
+      setTaskToDelete(null);
+    }
+    setShowDeleteConfirmation(false);
+  };
+  
+  const handleDeleteCancel = () => {
+    setTaskToDelete(null);
+    setShowDeleteConfirmation(false);
   };
 
   const totalCost = tasks.reduce((sum, task) => sum + task.cost, 0);
@@ -111,7 +128,7 @@ export default function TasksList() {
                     <FaEdit />
                   </Link>
                   <button 
-                    onClick={() => handleDeleteTask(task.id)}
+                    onClick={() => promptDeleteTask(task.id)}
                     className="text-red-600"
                   >
                     <FaTrash />
@@ -136,6 +153,18 @@ export default function TasksList() {
           ))}
         </div>
       )}
+      
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirmation}
+        title="Delete Task"
+        message="Are you sure you want to delete this task? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        type="danger"
+      />
     </main>
   );
 }

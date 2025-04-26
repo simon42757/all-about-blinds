@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaCalendarAlt, FaClock } from 'react-icons/fa';
 import { Survey } from '@/types';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 // Mock data function - in a real app, this would fetch from an API
 const fetchSurveys = (jobId: string): Promise<Survey[]> => {
@@ -36,6 +37,8 @@ export default function SurveysList() {
   
   const [surveys, setSurveys] = useState<Survey[]>([]);
   const [loading, setLoading] = useState(true);
+  const [surveyToDelete, setSurveyToDelete] = useState<string | null>(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const loadSurveys = async () => {
@@ -52,9 +55,23 @@ export default function SurveysList() {
     loadSurveys();
   }, [jobId]);
 
-  const handleDeleteSurvey = (surveyId: string) => {
-    // In a real app, this would call an API to delete the survey
-    setSurveys(surveys.filter(survey => survey.id !== surveyId));
+  const promptDeleteSurvey = (surveyId: string) => {
+    setSurveyToDelete(surveyId);
+    setShowDeleteConfirmation(true);
+  };
+  
+  const handleDeleteConfirm = () => {
+    if (surveyToDelete) {
+      // In a real app, this would call an API to delete the survey
+      setSurveys(surveys.filter(survey => survey.id !== surveyToDelete));
+      setSurveyToDelete(null);
+    }
+    setShowDeleteConfirmation(false);
+  };
+  
+  const handleDeleteCancel = () => {
+    setSurveyToDelete(null);
+    setShowDeleteConfirmation(false);
   };
 
   return (
@@ -100,7 +117,7 @@ export default function SurveysList() {
                     <FaEdit />
                   </Link>
                   <button 
-                    onClick={() => handleDeleteSurvey(survey.id)}
+                    onClick={() => promptDeleteSurvey(survey.id)}
                     className="text-red-600"
                   >
                     <FaTrash />
@@ -130,6 +147,18 @@ export default function SurveysList() {
           ))}
         </div>
       )}
+      
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirmation}
+        title="Delete Survey"
+        message="Are you sure you want to delete this survey? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        type="danger"
+      />
     </main>
   );
 }

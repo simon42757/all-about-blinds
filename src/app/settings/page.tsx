@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey, FaUniversity, FaCreditCard } from 'react-icons/fa';
+import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey, FaUniversity, FaCreditCard, FaTruck, FaPercent, FaPoundSign, FaCalculator } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import ConfirmationModal from '@/components/ConfirmationModal';
@@ -258,6 +258,90 @@ export default function Settings() {
               placeholder="Account number"
               defaultValue="30548168"
             />
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaTruck className="mr-2" /> Additional Costs
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          <div>
+            <label htmlFor="carriage" className="block text-sm font-medium text-gray-700 mb-1">
+              Carriage Cost (£)
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FaPoundSign className="text-gray-400" />
+              </div>
+              <input 
+                type="text" 
+                id="carriage" 
+                className="input-field pl-10" 
+                defaultValue="12.57"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label htmlFor="fastTrack" className="block text-sm font-medium text-gray-700 mb-1">
+              Fast Track Fee (£)
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FaPoundSign className="text-gray-400" />
+              </div>
+              <input 
+                type="text" 
+                id="fastTrack" 
+                className="input-field pl-10" 
+                defaultValue="2.25"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaCalculator className="mr-2" /> VAT & Profit
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          <div>
+            <label htmlFor="vatRate" className="block text-sm font-medium text-gray-700 mb-1">
+              VAT Rate (%)
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FaPercent className="text-gray-400" />
+              </div>
+              <input 
+                type="text" 
+                id="vatRate" 
+                className="input-field pl-10" 
+                defaultValue="20"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label htmlFor="profitRate" className="block text-sm font-medium text-gray-700 mb-1">
+              Profit Rate (%)
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <FaPercent className="text-gray-400" />
+              </div>
+              <input 
+                type="text" 
+                id="profitRate" 
+                className="input-field pl-10" 
+                defaultValue="25"
+              />
+            </div>
           </div>
         </div>
       </div>

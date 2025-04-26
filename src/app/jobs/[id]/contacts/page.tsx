@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaPlus, FaEdit, FaTrash, FaPhone, FaEnvelope, FaStar } from 'react-icons/fa';
 import { Contact } from '@/types';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 // Mock data function - in a real app, this would fetch from an API
 const fetchContacts = (jobId: string): Promise<Contact[]> => {
@@ -46,6 +47,8 @@ export default function JobContacts() {
   
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
+  const [contactToDelete, setContactToDelete] = useState<string | null>(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   useEffect(() => {
     const loadContacts = async () => {
@@ -62,9 +65,23 @@ export default function JobContacts() {
     loadContacts();
   }, [jobId]);
 
-  const handleDeleteContact = (contactId: string) => {
-    // In a real app, this would call an API to delete the contact
-    setContacts(contacts.filter(contact => contact.id !== contactId));
+  const promptDeleteContact = (contactId: string) => {
+    setContactToDelete(contactId);
+    setShowDeleteConfirmation(true);
+  };
+  
+  const handleDeleteConfirm = () => {
+    if (contactToDelete) {
+      // In a real app, this would call an API to delete the contact
+      setContacts(contacts.filter(contact => contact.id !== contactToDelete));
+      setContactToDelete(null);
+    }
+    setShowDeleteConfirmation(false);
+  };
+  
+  const handleDeleteCancel = () => {
+    setContactToDelete(null);
+    setShowDeleteConfirmation(false);
   };
 
   return (
@@ -117,7 +134,7 @@ export default function JobContacts() {
                     <FaEdit />
                   </Link>
                   <button 
-                    onClick={() => handleDeleteContact(contact.id)}
+                    onClick={() => promptDeleteContact(contact.id)}
                     className="text-red-600"
                   >
                     <FaTrash />
@@ -168,6 +185,18 @@ export default function JobContacts() {
           ))}
         </div>
       )}
+      
+      {/* Delete Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showDeleteConfirmation}
+        title="Delete Contact"
+        message="Are you sure you want to delete this contact? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+        type="danger"
+      />
     </main>
   );
 }
