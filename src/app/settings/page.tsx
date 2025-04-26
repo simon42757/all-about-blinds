@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey } from 'react-icons/fa';
+import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey, FaUniversity, FaCreditCard } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 
@@ -123,46 +123,132 @@ export default function Settings() {
               id="businessName"
               className="input-field" 
               placeholder="Your business name"
-              defaultValue="Perfect Blinds Ltd."
+              defaultValue="All About... Blinds"
             />
           </div>
           
           <div>
             <label htmlFor="businessPhone" className="block text-sm font-medium text-gray-700 mb-1">
-              Business Phone
+              Phone
             </label>
             <input 
               type="tel" 
               id="businessPhone"
               className="input-field" 
-              placeholder="Business phone number"
-              defaultValue="01234 567890"
+              placeholder="Phone number"
+              defaultValue="07871379507"
             />
           </div>
           
           <div>
             <label htmlFor="businessEmail" className="block text-sm font-medium text-gray-700 mb-1">
-              Business Email
+              Email
             </label>
             <input 
               type="email" 
               id="businessEmail"
               className="input-field" 
-              placeholder="Business email address"
-              defaultValue="info@perfectblinds.com"
+              placeholder="Email address"
+              defaultValue="simon@all-about-blinds.co.uk"
             />
           </div>
           
           <div>
-            <label htmlFor="vatNumber" className="block text-sm font-medium text-gray-700 mb-1">
-              VAT Number
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+              Address
             </label>
             <input 
               type="text" 
-              id="vatNumber"
+              id="address"
               className="input-field" 
-              placeholder="VAT registration number"
-              defaultValue="GB123456789"
+              placeholder="Business address"
+              defaultValue=""
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-1">
+              Area
+            </label>
+            <input 
+              type="text" 
+              id="area"
+              className="input-field" 
+              placeholder="Area"
+              defaultValue=""
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="postcode" className="block text-sm font-medium text-gray-700 mb-1">
+              Postcode
+            </label>
+            <input 
+              type="text" 
+              id="postcode"
+              className="input-field" 
+              placeholder="Postcode"
+              defaultValue=""
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaUniversity className="mr-2" /> Bank Transfer Details
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          <div>
+            <label htmlFor="bankName" className="block text-sm font-medium text-gray-700 mb-1">
+              Bank
+            </label>
+            <input 
+              type="text" 
+              id="bankName"
+              className="input-field" 
+              placeholder="Bank name"
+              defaultValue="LLOYDS"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="accountName" className="block text-sm font-medium text-gray-700 mb-1">
+              Account Name
+            </label>
+            <input 
+              type="text" 
+              id="accountName"
+              className="input-field" 
+              placeholder="Account name"
+              defaultValue="ALL ABOUT BLINDS"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="sortCode" className="block text-sm font-medium text-gray-700 mb-1">
+              Sort Code
+            </label>
+            <input 
+              type="text" 
+              id="sortCode"
+              className="input-field" 
+              placeholder="Sort code"
+              defaultValue="30-99-50"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="accountNumber" className="block text-sm font-medium text-gray-700 mb-1">
+              Account #
+            </label>
+            <input 
+              type="text" 
+              id="accountNumber"
+              className="input-field" 
+              placeholder="Account number"
+              defaultValue="30548168"
             />
           </div>
         </div>
