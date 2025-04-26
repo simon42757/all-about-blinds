@@ -12,7 +12,7 @@ interface JobListItem {
   organisation: string;
   postcode: string;
   date: string;
-  status: 'active' | 'completed' | 'quote';
+  status: 'active' | 'completed' | 'cancelled';
 }
 
 // Mock data function
@@ -172,10 +172,11 @@ export default function JobsList() {
       const newJobId = 'JOB' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
       
       // Clone the job with a new ID and name
-      const duplicatedJob = {
+      const duplicatedJob: JobListItem = {
         ...jobToDuplicate,
         id: newJobId,
         name: `${jobToDuplicate.name} (Copy)`,
+        status: 'active', // Always set duplicated jobs to active status
         date: new Date().toISOString().split('T')[0]
       };
       

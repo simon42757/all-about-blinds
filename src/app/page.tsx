@@ -13,7 +13,7 @@ interface JobListItem {
   organisation: string;
   postcode: string;
   date: string;
-  status: 'active' | 'completed' | 'quote';
+  status: 'active' | 'completed' | 'cancelled';
 }
 
 // Mock data function
@@ -188,7 +188,7 @@ export default function Home() {
       // Create a new job ID (in a real app this would be done on the server)
       const newJobId = 'JOB' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
       
-      const duplicatedJob = {
+      const duplicatedJob: JobListItem = {
         ...jobToDuplicate,
         id: newJobId,
         name: `${jobToDuplicate.name} (Copy)`,
