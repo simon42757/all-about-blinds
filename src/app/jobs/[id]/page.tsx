@@ -4,7 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaCalculator, FaEdit } from 'react-icons/fa';
-import PdfGeneratorButton from '@/components/PdfGeneratorButton';
+import dynamic from 'next/dynamic';
+
+// Import PDF component dynamically with no SSR to ensure it only runs on client
+const QuotePdfLink = dynamic(
+  () => import('@/components/QuotePdfDocument'),
+  { ssr: false }
+);
 import { Job } from '@/types';
 
 // Mock data function - in a real app, this would fetch from an API
@@ -285,7 +291,7 @@ export default function JobDetails() {
       </div>
       
       <div className="mt-6">
-        <PdfGeneratorButton job={job} />
+        <QuotePdfLink job={job} />
       </div>
     </main>
   );
