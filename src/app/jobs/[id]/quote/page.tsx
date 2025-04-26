@@ -58,6 +58,7 @@ export default function QuotePage() {
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [generated, setGenerated] = useState(false);
 
   const loadJob = async () => {
     try {
@@ -117,7 +118,15 @@ export default function QuotePage() {
           Generate a professional quotation PDF for this job with all blinds, services, and cost details.
         </p>
 
-        <QuotePdfDocument job={job} />
+        <div className="mb-4">
+          <QuotePdfDocument job={job} onGenerated={() => setGenerated(true)} />
+        </div>
+        
+        {generated && (
+          <p className="mb-6 text-green-600 text-center">
+            Quote successfully generated and downloaded!
+          </p>
+        )}
 
         <div className="mt-6 pt-6 border-t border-gray-200">
           <Link href={`/jobs/${jobId}`} className="btn-primary w-full">

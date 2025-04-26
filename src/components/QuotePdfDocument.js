@@ -295,7 +295,7 @@ const QuotePdfDocument = ({ job, logo }) => {
 };
 
 // PDF Download Link component that handles PDF generation and download
-const QuotePdfLink = ({ job }) => {
+const QuotePdfLink = ({ job, onGenerated }) => {
   const [logo, setLogo] = useState(null);
   
   useEffect(() => {
@@ -316,6 +316,14 @@ const QuotePdfLink = ({ job }) => {
         textDecoration: 'none',
         cursor: 'pointer',
         width: '100%'
+      }}
+      onClick={() => {
+        // Wait briefly to let the download start before triggering the success message
+        setTimeout(() => {
+          if (onGenerated && typeof onGenerated === 'function') {
+            onGenerated();
+          }
+        }, 500);
       }}
     >
       {({ blob, url, loading, error }) => (
