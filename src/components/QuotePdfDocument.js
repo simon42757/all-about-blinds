@@ -290,19 +290,14 @@ const QuotePdfLink = ({ job }) => {
       }}
     >
       {({ blob, url, loading, error }) => (
-        <div className="card w-full flex justify-between items-center p-4 cursor-pointer transition-colors hover:bg-gray-50">
-          <div className="flex items-center">
-            <svg className="w-6 h-6 text-red-600 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-            </svg>
-            <span className="font-medium">Generate Quote PDF</span>
+        <button className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors w-full">
+          <div className="text-red-600 text-2xl mb-2">
+            {loading ? 'Loading...' : 'PDF'}
           </div>
-          {loading ? (
-            <span className="text-sm text-gray-500">Generating...</span>
-          ) : (
-            <span className="text-sm text-primary-600">Click to download</span>
-          )}
-        </div>
+          <span className="font-medium">
+            {loading ? 'Generating Quote' : 'Generate Quote'}
+          </span>
+        </button>
       )}
     </PDFDownloadLink>
   );
