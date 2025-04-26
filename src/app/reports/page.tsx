@@ -2,13 +2,15 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaArrowLeft, FaFilePdf, FaFileExcel, FaChartBar } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 interface ReportOption {
   id: string;
   title: string;
   description: string;
-  icon: React.ReactNode;
+  color: string;
+  text: string;
   type: 'pdf' | 'excel' | 'chart';
 }
 
@@ -18,34 +20,89 @@ export default function Reports() {
       id: 'job-quotes',
       title: 'Job Quotes',
       description: 'Generate professional PDF quotes for clients',
-      icon: <FaFilePdf className="text-3xl text-red-600" />,
+      color: 'text-red-600',
+      text: 'PDF',
       type: 'pdf'
     },
     {
       id: 'job-invoices',
       title: 'Job Invoices',
       description: 'Generate PDF invoices for completed jobs',
-      icon: <FaFilePdf className="text-3xl text-red-600" />,
+      color: 'text-blue-600',
+      text: 'PDF',
       type: 'pdf'
     },
     {
       id: 'job-summary',
       title: 'Job Summary',
       description: 'Export all job data to Excel spreadsheet',
-      icon: <FaFileExcel className="text-3xl text-green-600" />,
+      color: 'text-green-600',
+      text: 'XLS',
       type: 'excel'
     },
     {
       id: 'sales-report',
       title: 'Sales Report',
       description: 'View sales performance charts and metrics',
-      icon: <FaChartBar className="text-3xl text-blue-600" />,
+      color: 'text-purple-600',
+      text: 'Chart',
       type: 'chart'
     },
   ]);
 
+  const [modalInfo, setModalInfo] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    reportId: string;
+    type: 'danger' | 'warning' | 'info';
+  }>({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    reportId: '',
+    type: 'info'
+  });
+
   const generateReport = (reportId: string) => {
-    alert(`In a production app, this would generate the ${reportId} report`);
+    let title = '';
+    let message = '';
+    let type: 'danger' | 'warning' | 'info' = 'info';
+    
+    // Set appropriate message and title based on report type
+    switch(reportId) {
+      case 'job-quotes':
+        title = 'Generate Quotes Report';
+        message = 'This will generate a PDF document containing all job quotes for the selected period.';
+        break;
+      case 'job-invoices':
+        title = 'Generate Invoices Report';
+        message = 'This will generate a PDF document containing all invoices for the selected period.';
+        break;
+      case 'job-summary':
+        title = 'Generate Job Summary';
+        message = 'This will export all job data to an Excel spreadsheet file.';
+        break;
+      case 'sales-report':
+        title = 'Generate Sales Report';
+        message = 'This will create a chart visualization of your sales performance metrics.';
+        break;
+      default:
+        title = 'Generate Report';
+        message = 'This will generate the requested report.';
+    }
+    
+    setModalInfo({ isOpen: true, title, message, reportId, type });
+  };
+  
+  const confirmGeneration = () => {
+    console.log(`Generating report: ${modalInfo.reportId}`);
+    // Implementation would go here in production
+    setModalInfo({ ...modalInfo, isOpen: false });
+  };
+  
+  const cancelGeneration = () => {
+    setModalInfo({ ...modalInfo, isOpen: false });
   };
 
   return (
@@ -63,20 +120,15 @@ export default function Reports() {
           Select a report type to generate or view
         </p>
 
-        <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
           {reportOptions.map((report) => (
             <button
               key={report.id}
               onClick={() => generateReport(report.id)}
-              className="w-full flex items-center p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors"
             >
-              <div className="mr-4">
-                {report.icon}
-              </div>
-              <div className="text-left">
-                <h3 className="font-medium text-gray-900">{report.title}</h3>
-                <p className="text-sm text-gray-500">{report.description}</p>
-              </div>
+              <div className={`${report.color} text-2xl mb-2`}>{report.text}</div>
+              <span className="font-medium">{report.title}</span>
             </button>
           ))}
         </div>
@@ -88,6 +140,18 @@ export default function Reports() {
           No recent reports generated
         </p>
       </div>
+      
+      {/* Report Generation Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={modalInfo.isOpen}
+        title={modalInfo.title}
+        message={modalInfo.message}
+        confirmText="Generate"
+        cancelText="Cancel"
+        onConfirm={confirmGeneration}
+        onCancel={cancelGeneration}
+        type={modalInfo.type}
+      />
     </main>
   );
 }

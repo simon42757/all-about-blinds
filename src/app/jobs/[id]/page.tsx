@@ -6,11 +6,6 @@ import { useParams } from 'next/navigation';
 import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaEdit } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 
-// Import PDF component dynamically with no SSR to ensure it only runs on client
-const QuotePdfLink = dynamic(
-  () => import('@/components/QuotePdfDocument'),
-  { ssr: false }
-);
 import { Job } from '@/types';
 
 // Mock data function - in a real app, this would fetch from an API
@@ -279,8 +274,26 @@ export default function JobDetails() {
       </div>
 
       
-      <div className="mt-6">
-        <QuotePdfLink job={job} />
+      <div className="mt-6 card p-4">
+        <h2 className="font-medium mb-4">Download Documents</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <Link href={`/jobs/${jobId}/quote`} className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors">
+            <div className="text-red-600 text-2xl mb-2">PDF</div>
+            <span className="font-medium">Generate Quote</span>
+          </Link>
+          <Link href={`/jobs/${jobId}/invoice`} className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors">
+            <div className="text-blue-600 text-2xl mb-2">PDF</div>
+            <span className="font-medium">Generate Invoice</span>
+          </Link>
+          <Link href={`/jobs/${jobId}/receipt`} className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors">
+            <div className="text-green-600 text-2xl mb-2">PDF</div>
+            <span className="font-medium">Generate Receipt</span>
+          </Link>
+          <Link href={`/jobs/${jobId}/envelope`} className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors">
+            <div className="text-purple-600 text-2xl mb-2">PDF</div>
+            <span className="font-medium">Generate Envelope</span>
+          </Link>
+        </div>
       </div>
     </main>
   );
