@@ -290,13 +290,8 @@ const QuotePdfLink = ({ job }) => {
       }}
     >
       {({ blob, url, loading, error }) => (
-        <button className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors w-full">
-          <div className="text-red-600 text-2xl mb-2">
-            {loading ? 'Loading...' : 'PDF'}
-          </div>
-          <span className="font-medium">
-            {loading ? 'Generating Quote' : 'Generate Quote'}
-          </span>
+        <button className={`w-full p-4 rounded-lg text-white font-medium flex items-center justify-center ${loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}>
+          {loading ? 'Generating Quote' : 'Generate Quote PDF'}
         </button>
       )}
     </PDFDownloadLink>
