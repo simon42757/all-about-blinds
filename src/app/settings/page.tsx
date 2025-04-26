@@ -97,20 +97,20 @@ export default function Settings() {
               id="name"
               className="input-field" 
               placeholder="Enter your name"
-              defaultValue="Admin User"
+              defaultValue="Simon Tucker"
             />
           </div>
           
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
+              Email
             </label>
             <input 
               type="email" 
               id="email"
               className="input-field" 
               placeholder="Enter your email address"
-              defaultValue="admin@blindsbusiness.com"
+              defaultValue="simon@all-about-blinds.co.uk"
             />
           </div>
         </div>
