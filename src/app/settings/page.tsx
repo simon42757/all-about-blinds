@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey, FaUniversity, FaCreditCard } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 export default function Settings() {
   const [darkMode, setDarkMode] = useState(false);
@@ -14,6 +15,7 @@ export default function Settings() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
   const { logout } = useAuth();
   const router = useRouter();
   
@@ -62,7 +64,11 @@ export default function Settings() {
   const handleSaveSettings = () => {
     // Save other settings
     // This is just a placeholder since we don't have actual settings storage yet
-    alert('Settings saved successfully!');
+    setShowSaveConfirmation(true);
+  };
+  
+  const handleSaveConfirmClose = () => {
+    setShowSaveConfirmation(false);
   };
 
   return (
@@ -376,6 +382,18 @@ export default function Settings() {
       >
         <FaSave className="mr-2" /> Save Settings
       </button>
+      
+      {/* Save Confirmation Modal */}
+      <ConfirmationModal 
+        isOpen={showSaveConfirmation}
+        title="Settings Saved"
+        message="Your settings have been saved successfully."
+        confirmText="OK"
+        cancelText=""
+        onConfirm={handleSaveConfirmClose}
+        onCancel={handleSaveConfirmClose}
+        type="info"
+      />
     </main>
   );
 }
