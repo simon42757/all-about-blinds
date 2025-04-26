@@ -183,7 +183,7 @@ export default function Settings() {
               id="area"
               className="input-field" 
               placeholder="Area"
-              defaultValue="Torpoint"
+              defaultValue="Torpoint, Cornwall"
             />
           </div>
           
