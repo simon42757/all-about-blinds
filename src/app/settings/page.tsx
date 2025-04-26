@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey, FaUniversity, FaCreditCard, FaTruck, FaPercent, FaPoundSign, FaCalculator } from 'react-icons/fa';
+import Image from 'next/image';
+import { FaArrowLeft, FaSave, FaUser, FaStore, FaCog, FaToggleOn, FaToggleOff, FaLock, FaKey, FaUniversity, FaCreditCard, FaTruck, FaPercent, FaPoundSign, FaCalculator, FaImage, FaUpload } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import ConfirmationModal from '@/components/ConfirmationModal';
@@ -16,6 +17,9 @@ export default function Settings() {
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
+  const [logo, setLogo] = useState<string | null>(null);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { logout } = useAuth();
   const router = useRouter();
   
@@ -60,6 +64,35 @@ export default function Settings() {
       router.push('/');
     }, 3000);
   };
+  
+  // Handle logo file selection
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLogoUploading(true);
+      // Create a FileReader to read the image as a data URL
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          // Store the image data URL in state
+          setLogo(event.target.result as string);
+          // In a real app, you would upload this to your server or cloud storage
+          // and store the URL reference in your database
+          localStorage.setItem('company_logo', event.target.result as string);
+          setLogoUploading(false);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Load saved logo on component mount
+  useEffect(() => {
+    const savedLogo = localStorage.getItem('company_logo');
+    if (savedLogo) {
+      setLogo(savedLogo);
+    }
+  }, []);
   
   const handleSaveSettings = () => {
     // Save other settings
@@ -198,6 +231,67 @@ export default function Settings() {
               placeholder="Postcode"
               defaultValue="PL11 2DY"
             />
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaImage className="mr-2" /> Company Logo
+        </h2>
+        
+        <div className="space-y-4 mt-4">
+          <div className="flex flex-col items-center justify-center p-4 border-2 border-dashed rounded-lg bg-gray-50">
+            {logo ? (
+              <div className="mb-4 relative">
+                <img 
+                  src={logo} 
+                  alt="Company Logo" 
+                  className="h-40 object-contain" 
+                />
+              </div>
+            ) : (
+              <div className="h-40 w-full flex items-center justify-center bg-gray-100 rounded-lg mb-4">
+                <FaImage className="text-gray-400 text-4xl" />
+                <span className="ml-2 text-gray-500">No logo uploaded</span>
+              </div>
+            )}
+            
+            <input
+              type="file"
+              id="logoUpload"
+              accept="image/*"
+              className="hidden"
+              onChange={handleLogoChange}
+              ref={fileInputRef}
+            />
+            
+            <button 
+              onClick={() => fileInputRef.current?.click()}
+              className="btn bg-pink-600 hover:bg-pink-700 text-white py-2 px-4 rounded-md flex items-center justify-center transition-colors"
+              disabled={logoUploading}
+            >
+              <FaUpload className="mr-2" /> 
+              {logoUploading ? 'Uploading...' : logo ? 'Change Logo' : 'Upload Logo'}
+            </button>
+            
+            {logo && (
+              <button 
+                onClick={() => {
+                  setLogo(null);
+                  localStorage.removeItem('company_logo');
+                }}
+                className="mt-2 text-red-600 text-sm underline hover:text-red-800 transition-colors"
+              >
+                Remove logo
+              </button>
+            )}
+            
+            <p className="text-sm text-gray-500 mt-2">
+              Upload your company logo to appear on quotes, invoices and other documents.
+              <br />
+              Recommended size: 300x200 pixels. Max file size: 2MB.
+            </p>
           </div>
         </div>
       </div>
