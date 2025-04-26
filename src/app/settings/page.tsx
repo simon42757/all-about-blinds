@@ -69,6 +69,8 @@ export default function Settings() {
   
   const handleSaveConfirmClose = () => {
     setShowSaveConfirmation(false);
+    // Navigate back to the main page
+    router.push('/');
   };
 
   return (
