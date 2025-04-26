@@ -19,6 +19,7 @@ const fetchJobData = (id: string): Promise<Job> => {
         address: '123 Main Street, Anytown',
         area: 'Central',
         postcode: 'AB12 3CD',
+        status: 'active', // Default status
         aoi: 'Modern design with minimalistic approach',
         contacts: [],
         surveys: [],
@@ -61,6 +62,7 @@ export default function EditJob() {
     address: '',
     area: '',
     postcode: '',
+    status: 'active',
     aoi: '',
   });
   const [loading, setLoading] = useState(true);
@@ -77,6 +79,7 @@ export default function EditJob() {
           address: data.address,
           area: data.area,
           postcode: data.postcode,
+          status: data.status || 'active',
           aoi: data.aoi || '',
         });
         setError(null);
@@ -123,7 +126,7 @@ export default function EditJob() {
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
         <Link href={`/jobs/${jobId}`} className="text-white mr-4">
-          <FaArrowLeft />
+          <FaArrowLeft className="text-xl" />
         </Link>
         <h1 className="text-xl font-bold text-white">Edit Job</h1>
       </header>
@@ -212,6 +215,22 @@ export default function EditJob() {
                   />
                   <ErrorMessage name="postcode" component="div" className="mt-1 text-sm text-red-600" />
                 </div>
+              </div>
+
+              <div>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                  Job Status
+                </label>
+                <Field 
+                  as="select"
+                  id="status" 
+                  name="status" 
+                  className="input-field"
+                >
+                  <option value="active">Active</option>
+                  <option value="quote">Quote</option>
+                  <option value="completed">Completed</option>
+                </Field>
               </div>
 
               <div>

@@ -14,6 +14,7 @@ const initialValues: JobFormState = {
   address: '',
   area: '',
   postcode: '',
+  status: 'active', // Default to active status
   aoi: '',
 };
 
@@ -50,10 +51,10 @@ export default function NewJob() {
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
-        <Link href="/" className="text-gray-600 mr-4">
-          <FaArrowLeft />
+        <Link href="/" className="text-white hover:text-primary-300 mr-4">
+          <FaArrowLeft className="text-xl" />
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">Create New Job</h1>
+        <h1 className="text-xl font-bold text-white">Create New Job</h1>
       </header>
 
       <div className="card">
@@ -133,6 +134,22 @@ export default function NewJob() {
                   />
                   <ErrorMessage name="postcode" component="div" className="mt-1 text-sm text-red-600" />
                 </div>
+              </div>
+              
+              <div>
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
+                  Job Status
+                </label>
+                <Field 
+                  as="select"
+                  id="status" 
+                  name="status" 
+                  className="input-field"
+                >
+                  <option value="active">Active</option>
+                  <option value="quote">Quote</option>
+                  <option value="completed">Completed</option>
+                </Field>
               </div>
 
               <div>

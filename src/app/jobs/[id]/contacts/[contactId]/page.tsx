@@ -88,7 +88,7 @@ export default function ContactDetails() {
       <header className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <Link href={`/jobs/${jobId}/contacts`} className="text-white mr-4">
-            <FaArrowLeft />
+            <FaArrowLeft className="text-xl" />
           </Link>
           <h1 className="text-xl font-bold text-white">Contact Details</h1>
         </div>

@@ -110,7 +110,7 @@ export default function DuplicateRollerBlind() {
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
         <Link href={`/jobs/${jobId}/blinds/roller/${blindId}`} className="text-white mr-4">
-          <FaArrowLeft />
+          <FaArrowLeft className="text-xl" />
         </Link>
         <h1 className="text-xl font-bold text-white">Duplicate Roller Blind</h1>
       </header>

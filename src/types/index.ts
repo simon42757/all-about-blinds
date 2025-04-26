@@ -6,6 +6,7 @@ export interface Job {
   address: string;
   area: string;
   postcode: string;
+  status?: 'active' | 'completed' | 'quote'; // Job status
   aoi?: string; // Area of Interest/Additional Information
   contacts: Contact[];
   surveys: Survey[];
@@ -94,6 +95,7 @@ export interface JobFormState {
   address: string;
   area: string;
   postcode: string;
+  status: 'active' | 'completed' | 'quote';
   aoi: string;
 }
 

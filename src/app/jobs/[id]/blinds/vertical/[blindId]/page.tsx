@@ -95,7 +95,7 @@ export default function VerticalBlindDetails() {
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
         <Link href={`/jobs/${jobId}/blinds`} className="text-white mr-4">
-          <FaArrowLeft />
+          <FaArrowLeft className="text-xl" />
         </Link>
         <h1 className="text-xl font-bold text-white">Vertical Blind Details</h1>
       </header>

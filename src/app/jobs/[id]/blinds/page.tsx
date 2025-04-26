@@ -260,10 +260,10 @@ export default function BlindsList() {
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
-        <Link href={`/jobs/${jobId}`} className="text-gray-600 mr-4">
-          <FaArrowLeft />
+        <Link href={`/jobs/${jobId}`} className="text-white hover:text-primary-300 mr-4">
+          <FaArrowLeft className="text-xl" />
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">Blinds</h1>
+        <h1 className="text-xl font-bold text-white">Blinds</h1>
       </header>
 
       {loading ? (

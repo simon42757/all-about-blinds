@@ -131,7 +131,7 @@ export default function TaskDetails() {
       <header className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <Link href={`/jobs/${jobId}/tasks`} className="text-white mr-4">
-            <FaArrowLeft />
+            <FaArrowLeft className="text-xl" />
           </Link>
           <h1 className="text-xl font-bold text-white">Task Details</h1>
         </div>

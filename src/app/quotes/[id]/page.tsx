@@ -212,7 +212,7 @@ export default function QuoteDetails() {
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
         <Link href="/quotes" className="text-white mr-4">
-          <FaArrowLeft />
+          <FaArrowLeft className="text-xl" />
         </Link>
         <div>
           <h1 className="text-xl font-bold text-white">Quote Details</h1>

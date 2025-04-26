@@ -189,21 +189,19 @@ export default function JobsList() {
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
-        <Link href="/" className="text-gray-600 mr-4">
-          <FaArrowLeft />
+        <Link href="/" className="text-white hover:text-primary-300 mr-4">
+          <FaArrowLeft className="text-xl" />
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">All Jobs</h1>
+        <h1 className="text-2xl font-bold text-white">All Jobs</h1>
       </header>
 
       <div className="mb-6">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <FaSearch className="text-gray-400" />
-          </div>
+        <div className="bg-white p-3 rounded-md shadow-sm flex items-center">
+          <FaSearch className="text-gray-400 mr-2" />
           <input
             type="text"
-            className="input-field pl-10"
             placeholder="Search jobs..."
+            className="w-full focus:outline-none text-gray-700"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -212,18 +210,18 @@ export default function JobsList() {
 
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
-          <div className="mr-2 text-gray-600">
+          <div className="mr-2 text-primary-300">
             <FaFilter />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="border-0 bg-transparent text-sm font-medium focus:outline-none text-gray-700"
+            className="border-0 bg-transparent text-sm font-medium focus:outline-none text-white"
           >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="quote">Quote</option>
-            <option value="completed">Completed</option>
+            <option value="all" className="text-gray-900 bg-white">All Status</option>
+            <option value="active" className="text-gray-900 bg-white">Active</option>
+            <option value="quote" className="text-gray-900 bg-white">Quote</option>
+            <option value="completed" className="text-gray-900 bg-white">Completed</option>
           </select>
         </div>
         

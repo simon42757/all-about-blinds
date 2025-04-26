@@ -17,23 +17,126 @@ const fetchJobData = (id: string): Promise<Job> => {
         address: '123 Main Street, Anytown',
         area: 'Central',
         postcode: 'AB12 3CD',
+        status: 'active',
         aoi: 'Modern design with minimalistic approach',
-        contacts: [],
-        surveys: [],
-        tasks: [],
-        rollerBlinds: [],
-        verticalBlinds: [],
-        venetianBlinds: [],
+        contacts: [
+          {
+            id: 'CONT001',
+            name: 'John Smith',
+            organisation: 'Smith Family',
+            phone: '07700 900123',
+            email: 'john.smith@example.com',
+            isMainContact: true
+          },
+          {
+            id: 'CONT002',
+            name: 'Sarah Smith',
+            organisation: 'Smith Family',
+            phone: '07700 900124',
+            email: 'sarah.smith@example.com',
+            isMainContact: false
+          }
+        ],
+        surveys: [
+          {
+            id: 'SURV001',
+            brief: 'Initial site assessment',
+            date: '2025-04-25',
+            time: '10:00',
+            surveyorName: 'Mike Johnson',
+            findings: 'All windows measured, customer prefers roller blinds for the main room',
+          }
+        ],
+        tasks: [
+          {
+            id: 'TASK001',
+            description: 'Order materials',
+            cost: 75.00,
+            status: 'pending',
+            dueDate: '2025-04-30',
+          },
+          {
+            id: 'TASK002',
+            description: 'Schedule installation',
+            cost: 150.00,
+            status: 'pending',
+            dueDate: '2025-05-10',
+          },
+          {
+            id: 'TASK003',
+            description: 'Follow-up call',
+            cost: 0.00,
+            status: 'pending',
+            dueDate: '2025-05-17',
+          }
+        ],
+        rollerBlinds: [
+          {
+            id: 'ROLL001',
+            location: 'Living Room',
+            width: 1200,
+            drop: 1500,
+            quantity: 2,
+            cost: 185.00,
+            aoi: 'Cream fabric, chain mechanism'
+          },
+          {
+            id: 'ROLL002',
+            location: 'Kitchen',
+            width: 900,
+            drop: 1200,
+            quantity: 1,
+            cost: 120.00,
+            aoi: 'Waterproof white fabric'
+          }
+        ],
+        verticalBlinds: [
+          {
+            id: 'VERT001',
+            location: 'Office',
+            width: 1800,
+            drop: 2000,
+            quantity: 1,
+            cost: 210.00,
+            aoi: 'Light gray, wand control'
+          }
+        ],
+        venetianBlinds: [
+          {
+            id: 'VENE001',
+            location: 'Bathroom',
+            width: 600,
+            drop: 900,
+            quantity: 1,
+            cost: 95.00,
+            aoi: 'Waterproof aluminum'
+          },
+          {
+            id: 'VENE002',
+            location: 'Bedroom',
+            width: 1000,
+            drop: 1300,
+            quantity: 2,
+            cost: 165.00,
+            aoi: 'Wooden slats'
+          }
+        ],
         costSummary: {
-          subtotal: 0,
-          carriage: 0,
-          fastTrack: 0,
-          vat: 0,
+          subtotal: 1125.00,
+          carriage: 50.00,
+          fastTrack: 0.00,
+          vat: 235.00,
           vatRate: 20,
-          profit: 0,
+          profit: 281.25,
           profitRate: 25,
-          total: 0,
-          additionalCosts: []
+          total: 1410.00,
+          additionalCosts: [
+            {
+              id: 'AC001',
+              description: 'Special delivery',
+              amount: 50.00
+            }
+          ]
         },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
@@ -87,12 +190,12 @@ export default function JobDetails() {
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
-        <Link href="/" className="text-gray-600 mr-4">
-          <FaArrowLeft />
+        <Link href="/" className="text-white hover:text-primary-300 mr-4">
+          <FaArrowLeft className="text-xl" />
         </Link>
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{job.name}</h1>
-          <div className="text-sm text-gray-500">ID: {job.id}</div>
+          <h1 className="text-xl font-bold text-white">{job.name}</h1>
+          <div className="text-sm text-primary-200">ID: {job.id}</div>
         </div>
       </header>
 

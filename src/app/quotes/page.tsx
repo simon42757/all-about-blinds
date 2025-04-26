@@ -117,21 +117,19 @@ export default function QuotesList() {
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
       <header className="flex items-center mb-6">
-        <Link href="/" className="text-gray-600 mr-4">
-          <FaArrowLeft />
+        <Link href="/" className="text-white hover:text-primary-300 mr-4">
+          <FaArrowLeft className="text-xl" />
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">Quotes</h1>
+        <h1 className="text-xl font-bold text-white">Quotes</h1>
       </header>
 
       <div className="mb-6">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <FaSearch className="text-gray-400" />
-          </div>
+        <div className="bg-white p-3 rounded-md shadow-sm flex items-center">
+          <FaSearch className="text-gray-400 mr-2" />
           <input
             type="text"
-            className="input-field pl-10"
             placeholder="Search quotes..."
+            className="w-full focus:outline-none text-gray-700"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
