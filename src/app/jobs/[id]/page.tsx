@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaCalculator, FaEdit } from 'react-icons/fa';
+import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaEdit } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 
 // Import PDF component dynamically with no SSR to ensure it only runs on client
@@ -278,17 +278,6 @@ export default function JobDetails() {
         </Link>
       </div>
 
-      <div className="mt-6">
-        <Link href={`/jobs/${jobId}/costs`} className="card flex justify-between items-center p-4">
-          <div className="flex items-center">
-            <FaCalculator className="text-2xl text-primary-600 mr-3" />
-            <span className="font-medium">Cost Summary</span>
-          </div>
-          <div className="text-lg font-semibold">
-            £{job.costSummary.total.toFixed(2)}
-          </div>
-        </Link>
-      </div>
       
       <div className="mt-6">
         <QuotePdfLink job={job} />
