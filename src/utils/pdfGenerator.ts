@@ -201,7 +201,7 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
     doc.setFontSize(10);
     doc.setTextColor(128, 128, 128);
     doc.text(
-      'All About Blinds Ltd | 123 Window Street, Blindtown BL1 2ND | 01234 567890 | info@allaboutblinds.com',
+      'All About... Blinds | Unit 1, 43 Cremyll Road, Torpoint, Cornwall PL11 2DY | 07871379507 | simon@all-about-blinds.co.uk',
       105,
       285,
       { align: 'center' }
