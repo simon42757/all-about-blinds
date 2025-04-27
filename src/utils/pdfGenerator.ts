@@ -915,7 +915,19 @@ export const savePdf = async (doc: any, filename: string): Promise<void> => {
   }
 
   try {
-    doc.save(filename);
+    // Create a promise that will resolve after a reasonable delay
+    // This is to ensure the success message only appears after the browser
+    // has had time to process the download
+    return new Promise((resolve) => {
+      // Save the document
+      doc.save(filename);
+      
+      // Wait a reasonable amount of time before resolving
+      // This gives the browser time to actually process the download
+      setTimeout(() => {
+        resolve();
+      }, 1000); // 1 second delay to ensure download has started
+    });
   } catch (error) {
     console.error('Error saving PDF:', error);
     throw error;

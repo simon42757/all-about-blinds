@@ -317,20 +317,22 @@ const QuotePdfLink = ({ job, onGenerated }) => {
         cursor: 'pointer',
         width: '100%'
       }}
-      onClick={() => {
-        // Wait briefly to let the download start before triggering the success message
-        setTimeout(() => {
-          if (onGenerated && typeof onGenerated === 'function') {
-            onGenerated();
-          }
-        }, 500);
-      }}
+      // Don't use onClick as it fires too early - we'll use the blob callback instead
     >
-      {({ blob, url, loading, error }) => (
+      {({ blob, url, loading, error }) => {
+        // Only trigger the callback once blob is available (i.e., document is ready to download)
+        if (blob && !loading && onGenerated && typeof onGenerated === 'function') {
+          // Use requestAnimationFrame to ensure the callback is called after rendering
+          window.requestAnimationFrame(() => {
+            onGenerated();
+          });
+        }
+        
+        return (
         <button className={`w-full p-4 rounded-lg text-white font-medium flex items-center justify-center ${loading ? 'bg-gray-400' : 'bg-pink-600 hover:bg-pink-700'}`}>
           {loading ? 'Generating Quote' : 'Generate Quote PDF'}
         </button>
-      )}
+      );}}
     </PDFDownloadLink>
   );
 };
