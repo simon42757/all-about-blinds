@@ -644,20 +644,7 @@ export const generateJobReceiptPdf = async (job: Job): Promise<any> => {
       doc.text(`Address: ${job.address || 'Address not provided'}`, 25, 116);
       doc.text(`Postcode: ${job.postcode || ''}`, 25, 123);
       
-      // Set default values to prevent calculation errors
-      const safeJob = {
-        ...job,
-        rollerBlinds: job.rollerBlinds || [],
-        verticalBlinds: job.verticalBlinds || [],
-        venetianBlinds: job.venetianBlinds || [],
-        tasks: job.tasks || [],
-        costSummary: job.costSummary || {
-          additionalCosts: [],
-          vatRate: 20,
-          carriage: 0,
-          fastTrack: 0
-        }
-      };
+      // safeJob is already defined above, so we don't need to redefine it
       
       // Calculate costs safely
       const blindsCost = [...safeJob.rollerBlinds, ...safeJob.verticalBlinds, ...safeJob.venetianBlinds]
