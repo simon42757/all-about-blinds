@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaEdit } from 'react-icons/fa';
+import { FaArrowLeft, FaUser, FaCalendarAlt, FaTasks, FaWindowMaximize, FaEdit, FaCalculator, FaPoundSign } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 
 import { Job } from '@/types';
@@ -275,7 +275,18 @@ export default function JobDetails() {
 
       
       <div className="mt-6 card p-4">
-        <h2 className="font-medium mb-4">Download Documents</h2>
+        <h2 className="font-medium mb-4">Document & Cost Management</h2>
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <Link href={`/jobs/${jobId}/costs`} className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors bg-pink-50">
+            <div className="text-pink-600 text-2xl mb-2">
+              <FaCalculator />
+            </div>
+            <span className="font-medium">Cost Summary</span>
+            <span className="text-xs text-gray-500 mt-1">Set document dates & costs</span>
+          </Link>
+        </div>
+        
+        <h3 className="font-medium mb-4 pt-2 border-t border-gray-200">Generate Documents</h3>
         <div className="grid grid-cols-2 gap-4">
           <Link href={`/jobs/${jobId}/quote`} className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors">
             <div className="text-red-600 text-2xl mb-2">PDF</div>
