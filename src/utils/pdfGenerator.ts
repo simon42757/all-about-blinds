@@ -71,7 +71,12 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
   doc.setFontSize(12);
   doc.setFont('helvetica', 'normal');
   doc.text(`Quote Reference: ${job.id}`, 20, 70);
-  doc.text(`Date: ${new Date().toLocaleDateString('en-GB')}`, 20, 77);
+  
+  // Use custom document date if available, otherwise use current date
+  const displayDate = job.costSummary.documentDate 
+    ? new Date(job.costSummary.documentDate).toLocaleDateString('en-GB')
+    : new Date().toLocaleDateString('en-GB');
+  doc.text(`Date: ${displayDate}`, 20, 77);
   
   // Add client details section
   doc.setFillColor(240, 240, 240);
@@ -293,23 +298,10 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
       // Add reference and date
       doc.setFontSize(12);
       doc.setFont('helvetica', 'normal');
-      doc.text(`Invoice Reference: INV-${job.id.replace('JOB', '')}`, 20, 70);
-      doc.text(`Date: ${new Date().toLocaleDateString('en-GB')}`, 20, 77);
-      doc.text(`Due Date: ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('en-GB')}`, 20, 84);
+      // Add date and reference
+      doc.text(`INVOICE #INV-${job.id}`, 105, 60, { align: 'center' });
       
-      // Add client details section
-      doc.setFillColor(240, 240, 240);
-      doc.rect(20, 92, 170, 40, 'F');
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text('BILL TO', 25, 102);
-      doc.setFont('helvetica', 'normal');
-      doc.text(`Name: ${job.name || 'Client'}`, 25, 109);
-      if (job.organisation) doc.text(`Organisation: ${job.organisation}`, 25, 116);
-      doc.text(`Address: ${job.address || 'Address not provided'}`, 25, 123);
-      doc.text(`Postcode: ${job.postcode || ''}`, 25, 130);
-      
-      // Set default values to prevent calculation errors
+      // Use custom document date if available, otherwise use current date
       const safeJob = {
         ...job,
         rollerBlinds: job.rollerBlinds || [],
@@ -323,6 +315,23 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
           fastTrack: 0
         }
       };
+      const displayDate = safeJob.costSummary?.documentDate 
+        ? new Date(safeJob.costSummary.documentDate).toLocaleDateString('en-GB')
+        : new Date().toLocaleDateString('en-GB');
+      doc.text(`Date: ${displayDate}`, 20, 80);
+      doc.text(`Due Date: ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('en-GB')}`, 20, 84);
+      
+      // Add client details section
+      doc.setFillColor(240, 240, 240);
+      doc.rect(20, 92, 170, 40, 'F');
+      
+      doc.setFont('helvetica', 'bold');
+      doc.text('BILL TO', 25, 102);
+      doc.setFont('helvetica', 'normal');
+      doc.text(`Name: ${job.name || 'Client'}`, 25, 109);
+      if (job.organisation) doc.text(`Organisation: ${job.organisation}`, 25, 116);
+      doc.text(`Address: ${job.address || 'Address not provided'}`, 25, 123);
+      doc.text(`Postcode: ${job.postcode || ''}`, 25, 130);
       
       // Add blinds table
       const blindsData: any[] = [];
@@ -601,8 +610,27 @@ export const generateJobReceiptPdf = async (job: Job): Promise<any> => {
       doc.setFont('helvetica', 'normal');
       // Safely handle job ID
       const safeJobId = job?.id ? job.id.replace('JOB', '') : 'UNKNOWN';
-      doc.text(`Receipt Number: REC-${safeJobId}`, 20, 70);
-      doc.text(`Date: ${new Date().toLocaleDateString('en-GB')}`, 20, 77);
+      // Add date and reference
+      doc.text(`RECEIPT #RCPT-${job.id}`, 105, 60, { align: 'center' });
+      
+      // Use custom document date if available, otherwise use current date
+      const safeJob = {
+        ...job,
+        rollerBlinds: job.rollerBlinds || [],
+        verticalBlinds: job.verticalBlinds || [],
+        venetianBlinds: job.venetianBlinds || [],
+        tasks: job.tasks || [],
+        costSummary: job.costSummary || {
+          additionalCosts: [],
+          vatRate: 20,
+          carriage: 0,
+          fastTrack: 0
+        }
+      };
+      const displayDate = safeJob.costSummary?.documentDate 
+        ? new Date(safeJob.costSummary.documentDate).toLocaleDateString('en-GB')
+        : new Date().toLocaleDateString('en-GB');
+      doc.text(`Date: ${displayDate}`, 20, 80);
       
       // Add client details section
       doc.setFillColor(240, 240, 240);

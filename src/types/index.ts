@@ -80,6 +80,7 @@ export interface CostSummary {
   profitRate: number;
   total: number;
   additionalCosts: AdditionalCost[];
+  documentDate?: string; // Custom date for quotes, invoices and receipts
 }
 
 export interface AdditionalCost {
@@ -138,6 +139,7 @@ export interface CostSummaryFormState {
   fastTrack: number;
   vatRate: number;
   profitRate: number;
+  documentDate: string; // Custom date for documents
   additionalCosts: {
     description: string;
     amount: number;

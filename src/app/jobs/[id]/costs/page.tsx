@@ -84,6 +84,7 @@ const validationSchema = Yup.object({
   fastTrack: Yup.number().min(0, 'Cannot be negative'),
   vatRate: Yup.number().min(0, 'Cannot be negative').max(100, 'Cannot exceed 100%'),
   profitRate: Yup.number().min(0, 'Cannot be negative').max(100, 'Cannot exceed 100%'),
+  documentDate: Yup.string(),
   additionalCosts: Yup.array().of(
     Yup.object({
       description: Yup.string().required('Description is required'),
@@ -163,6 +164,7 @@ export default function CostCalculator() {
             fastTrack: values.fastTrack,
             vatRate: values.vatRate,
             profitRate: values.profitRate,
+            documentDate: values.documentDate,
             additionalCosts: values.additionalCosts.map((cost, index) => ({
               id: `ADD${(index + 1).toString().padStart(3, '0')}`,
               description: cost.description,
@@ -216,10 +218,11 @@ export default function CostCalculator() {
   const grandTotal = preProfit + profitAmount;
 
   const initialValues: CostSummaryFormState = {
-    carriage: job.costSummary.carriage,
-    fastTrack: job.costSummary.fastTrack,
-    vatRate: job.costSummary.vatRate,
-    profitRate: job.costSummary.profitRate,
+    carriage: job?.costSummary.carriage || 0,
+    fastTrack: job?.costSummary.fastTrack || 0,
+    vatRate: job?.costSummary.vatRate || 20,
+    profitRate: job?.costSummary.profitRate || 25,
+    documentDate: job?.costSummary.documentDate || new Date().toISOString().split('T')[0],
     additionalCosts: job.costSummary.additionalCosts.map(cost => ({
       description: cost.description,
       amount: cost.amount
@@ -353,6 +356,22 @@ export default function CostCalculator() {
                 )}
               </FieldArray>
 
+              <h2 className="section-title pt-2">Document Settings</h2>
+              
+              <div className="mb-4">
+                <label htmlFor="documentDate" className="block text-sm font-medium text-gray-700 mb-1">
+                  Document Date <span className="text-gray-500 text-xs">(for quotes, invoices & receipts)</span>
+                </label>
+                <Field 
+                  id="documentDate" 
+                  name="documentDate" 
+                  type="date"
+                  className="input-field" 
+                />
+                <ErrorMessage name="documentDate" component="div" className="mt-1 text-sm text-red-600" />
+                <div className="mt-1 text-xs text-gray-500">This date will appear on all generated PDF documents.</div>
+              </div>
+              
               <h2 className="section-title pt-2">VAT & Profit</h2>
               
               <div className="grid grid-cols-2 gap-3">

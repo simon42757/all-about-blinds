@@ -171,7 +171,11 @@ const QuotePdfDocument = ({ job, logo }) => {
         {/* Reference and Date */}
         <View style={styles.section}>
           <Text style={styles.label}>Quote Reference: {job.id}</Text>
-          <Text style={styles.label}>Date: {new Date().toLocaleDateString('en-GB')}</Text>
+          <Text style={styles.label}>Date: {
+            job.costSummary.documentDate
+              ? new Date(job.costSummary.documentDate).toLocaleDateString('en-GB')
+              : new Date().toLocaleDateString('en-GB')
+          }</Text>
         </View>
         
         {/* Client Details */}
