@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { Formik, Form, Field, ErrorMessage, FieldArray } from 'formik';
 import * as Yup from 'yup';
-import { FaArrowLeft, FaPlus, FaTrash, FaFilePdf } from 'react-icons/fa';
+import { FaArrowLeft, FaPlus, FaTrash, FaFilePdf, FaFileExcel, FaChartBar } from 'react-icons/fa';
+import ConfirmationModal from '@/components/ConfirmationModal';
 import { Job, CostSummaryFormState, AdditionalCost } from '@/types';
 
 // Mock data function - in a real app, this would fetch from an API
@@ -84,7 +85,9 @@ const validationSchema = Yup.object({
   fastTrack: Yup.number().min(0, 'Cannot be negative'),
   vatRate: Yup.number().min(0, 'Cannot be negative').max(100, 'Cannot exceed 100%'),
   profitRate: Yup.number().min(0, 'Cannot be negative').max(100, 'Cannot exceed 100%'),
-  documentDate: Yup.string(),
+  quoteDate: Yup.string(),
+  invoiceDate: Yup.string(),
+  receiptDate: Yup.string(),
   additionalCosts: Yup.array().of(
     Yup.object({
       description: Yup.string().required('Description is required'),
@@ -92,6 +95,16 @@ const validationSchema = Yup.object({
     })
   )
 });
+
+interface ReportOption {
+  id: string;
+  title: string;
+  description: string;
+  color: string;
+  text: string;
+  type: 'pdf' | 'excel' | 'chart';
+  icon: JSX.Element;
+}
 
 export default function CostCalculator() {
   const params = useParams();
@@ -101,6 +114,59 @@ export default function CostCalculator() {
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [reportOptions] = useState<ReportOption[]>([
+    {
+      id: 'job-quotes',
+      title: 'Job Quotes',
+      description: 'Generate professional PDF quotes for clients',
+      color: 'text-red-600',
+      text: 'PDF',
+      type: 'pdf',
+      icon: <FaFilePdf />
+    },
+    {
+      id: 'job-invoices',
+      title: 'Job Invoices',
+      description: 'Generate PDF invoices for completed jobs',
+      color: 'text-blue-600',
+      text: 'PDF',
+      type: 'pdf',
+      icon: <FaFilePdf />
+    },
+    {
+      id: 'job-summary',
+      title: 'Job Summary',
+      description: 'Export all job data to Excel spreadsheet',
+      color: 'text-green-600',
+      text: 'XLS',
+      type: 'excel',
+      icon: <FaFileExcel />
+    },
+    {
+      id: 'sales-report',
+      title: 'Sales Report',
+      description: 'View sales performance charts and metrics',
+      color: 'text-purple-600',
+      text: 'Chart',
+      type: 'chart',
+      icon: <FaChartBar />
+    },
+  ]);
+
+  const [modalInfo, setModalInfo] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    reportId: string;
+    type: 'danger' | 'warning' | 'info';
+  }>({ 
+    isOpen: false, 
+    title: '', 
+    message: '', 
+    reportId: '',
+    type: 'info'
+  });
 
   // Calculate subtotals and costs
   const calculateSubtotals = (job: Job | null) => {
@@ -182,8 +248,69 @@ export default function CostCalculator() {
   };
 
   const generatePdfQuote = () => {
-    // In a real app, this would generate a PDF quote
-    alert('PDF quote generation would be implemented here!');
+    generateReport('job-quotes');
+  };
+
+  const generateReport = (reportId: string) => {
+    let title = '';
+    let message = '';
+    let type: 'danger' | 'warning' | 'info' = 'info';
+    
+    // Set appropriate message and title based on report type
+    switch(reportId) {
+      case 'job-quotes':
+        title = 'Generate Quotes Report';
+        message = 'This will generate a PDF document containing quotes for this job using the Quote Date.';
+        break;
+      case 'job-invoices':
+        title = 'Generate Invoices Report';
+        message = 'This will generate a PDF document containing invoices for this job using the Invoice Date.';
+        break;
+      case 'job-summary':
+        title = 'Generate Job Summary';
+        message = 'This will export all job data to an Excel spreadsheet file.';
+        break;
+      case 'sales-report':
+        title = 'Generate Sales Report';
+        message = 'This will create a chart visualization of your sales performance metrics.';
+        break;
+      default:
+        title = 'Generate Report';
+        message = 'This will generate the requested report.';
+    }
+    
+    setModalInfo({ isOpen: true, title, message, reportId, type });
+  };
+  
+  const confirmGeneration = () => {
+    console.log(`Generating report: ${modalInfo.reportId}`);
+    // Get the appropriate date for the report type
+    let dateToUse = new Date().toISOString().slice(0, 10);
+    
+    if (job?.costSummary) {
+      switch(modalInfo.reportId) {
+        case 'job-quotes':
+          dateToUse = job.costSummary.quoteDate || dateToUse;
+          break;
+        case 'job-invoices':
+          dateToUse = job.costSummary.invoiceDate || dateToUse;
+          break;
+        case 'sales-report':
+          dateToUse = job.costSummary.receiptDate || dateToUse;
+          break;
+        default:
+          break;
+      }
+    }
+    
+    console.log(`Using date: ${dateToUse} for report: ${modalInfo.reportId}`);
+    // Implementation would go here in production
+    setModalInfo({ ...modalInfo, isOpen: false });
+    alert(`Generating ${modalInfo.title} with date ${dateToUse}...`);
+  };
+  
+  const cancelGeneration = () => {
+    setModalInfo({ ...modalInfo, isOpen: false });
   };
 
   if (loading) {
@@ -218,11 +345,13 @@ export default function CostCalculator() {
   const grandTotal = preProfit + profitAmount;
 
   const initialValues: CostSummaryFormState = {
-    carriage: job?.costSummary.carriage || 0,
-    fastTrack: job?.costSummary.fastTrack || 0,
-    vatRate: job?.costSummary.vatRate || 20,
-    profitRate: job?.costSummary.profitRate || 25,
-    documentDate: job?.costSummary.documentDate || new Date().toISOString().split('T')[0],
+    carriage: job?.costSummary?.carriage || 0,
+    fastTrack: job?.costSummary?.fastTrack || 0,
+    vatRate: job?.costSummary?.vatRate || 0,
+    profitRate: job?.costSummary?.profitRate || 0,
+    quoteDate: job?.costSummary?.quoteDate || new Date().toISOString().slice(0, 10), // YYYY-MM-DD format
+    invoiceDate: job?.costSummary?.invoiceDate || new Date().toISOString().slice(0, 10),
+    receiptDate: job?.costSummary?.receiptDate || new Date().toISOString().slice(0, 10),
     additionalCosts: job.costSummary.additionalCosts.map(cost => ({
       description: cost.description,
       amount: cost.amount
@@ -356,20 +485,49 @@ export default function CostCalculator() {
                 )}
               </FieldArray>
 
-              <h2 className="section-title pt-2">Document Settings</h2>
+              <h2 className="section-title pt-2">Document Dates</h2>
               
-              <div className="mb-4">
-                <label htmlFor="documentDate" className="block text-sm font-medium text-gray-700 mb-1">
-                  Document Date <span className="text-gray-500 text-xs">(for quotes, invoices & receipts)</span>
-                </label>
-                <Field 
-                  id="documentDate" 
-                  name="documentDate" 
-                  type="date"
-                  className="input-field" 
-                />
-                <ErrorMessage name="documentDate" component="div" className="mt-1 text-sm text-red-600" />
-                <div className="mt-1 text-xs text-gray-500">This date will appear on all generated PDF documents.</div>
+              <div className="grid grid-cols-3 gap-3 pb-2">
+                <div>
+                  <label htmlFor="quoteDate" className="block text-sm font-medium text-gray-700 mb-1">
+                    Quote Date
+                  </label>
+                  <Field 
+                    id="quoteDate" 
+                    name="quoteDate" 
+                    type="date"
+                    className="input-field" 
+                  />
+                  <ErrorMessage name="quoteDate" component="div" className="mt-1 text-sm text-red-600" />
+                </div>
+                
+                <div>
+                  <label htmlFor="invoiceDate" className="block text-sm font-medium text-gray-700 mb-1">
+                    Invoice Date
+                  </label>
+                  <Field 
+                    id="invoiceDate" 
+                    name="invoiceDate" 
+                    type="date"
+                    className="input-field" 
+                  />
+                  <ErrorMessage name="invoiceDate" component="div" className="mt-1 text-sm text-red-600" />
+                </div>
+                
+                <div>
+                  <label htmlFor="receiptDate" className="block text-sm font-medium text-gray-700 mb-1">
+                    Receipt Date
+                  </label>
+                  <Field 
+                    id="receiptDate" 
+                    name="receiptDate" 
+                    type="date"
+                    className="input-field" 
+                  />
+                  <ErrorMessage name="receiptDate" component="div" className="mt-1 text-sm text-red-600" />
+                </div>
+                
+                <div className="col-span-3 mt-1 text-xs text-gray-500">These dates will appear on their respective generated PDF documents.</div>
               </div>
               
               <h2 className="section-title pt-2">VAT & Profit</h2>
@@ -454,15 +612,37 @@ export default function CostCalculator() {
         </div>
       </div>
 
-      <div className="card">
-        <button 
-          type="button" 
-          onClick={generatePdfQuote}
-          className="btn-primary w-full flex items-center justify-center"
-        >
-          <FaFilePdf className="mr-2" /> Generate PDF Quote
-        </button>
+      <div className="card mb-6">
+        <h2 className="section-title">Generate Reports</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          Select a report type to generate for this job
+        </p>
+
+        <div className="grid grid-cols-2 gap-4">
+          {reportOptions.map((report) => (
+            <button
+              key={report.id}
+              onClick={() => generateReport(report.id)}
+              className="border rounded-lg p-4 flex flex-col items-center hover:bg-gray-50 transition-colors"
+            >
+              <div className={`${report.color} text-2xl mb-2`}>{report.icon}</div>
+              <span className="font-medium">{report.title}</span>
+            </button>
+          ))}
+        </div>
       </div>
+      
+      {/* Report Generation Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={modalInfo.isOpen}
+        title={modalInfo.title}
+        message={modalInfo.message}
+        confirmText="Generate"
+        cancelText="Cancel"
+        onConfirm={confirmGeneration}
+        onCancel={cancelGeneration}
+        type={modalInfo.type}
+      />
     </main>
   );
 }
