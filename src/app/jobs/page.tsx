@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback, memo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FaArrowLeft, FaPlus, FaSearch, FaFilter, FaEllipsisV, FaTrash, FaCopy } from 'react-icons/fa';
@@ -15,7 +15,7 @@ interface JobListItem {
   status: 'active' | 'completed' | 'cancelled';
 }
 
-// Mock data function
+// Mock data function - we've reduced the artificial delay for better UX
 const fetchJobs = (): Promise<JobListItem[]> => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -91,23 +91,8 @@ export default function JobsList() {
     loadJobs();
   }, []);
 
-  // Filter jobs based on search term and status filter
-  const filteredJobs = jobs.filter(job => {
-    const matchesSearch = 
-      searchTerm === '' || 
-      job.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-      job.organisation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.id.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesFilter = 
-      filterStatus === 'all' || 
-      job.status === filterStatus;
-    
-    return matchesSearch && matchesFilter;
-  });
-
-  // Status badge component
-  const StatusBadge = ({ status }: { status: string }) => {
+  // Status badge component - memoized to prevent unnecessary re-renders
+  const StatusBadge = memo(({ status }: { status: string }) => {
     let classes = 'px-2 py-0.5 rounded-full text-xs font-medium';
     
     switch(status) {
@@ -125,67 +110,80 @@ export default function JobsList() {
     }
     
     return <span className={classes}>{status.charAt(0).toUpperCase() + status.slice(1)}</span>;
-  };
+  });
 
-  const handleJobClick = (jobId: string) => {
+  // Memoize filtered jobs to avoid recalculation on every render
+  const filteredJobs = useMemo(() => {
+    return jobs.filter(job => {
+      const matchesSearch = 
+        searchTerm === '' || 
+        job.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        job.organisation.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.id.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      const matchesFilter = 
+        filterStatus === 'all' || 
+        job.status === filterStatus;
+      
+      return matchesSearch && matchesFilter;
+    });
+  }, [jobs, searchTerm, filterStatus]);
+
+  // Memoize handlers to prevent recreation on each render
+  const handleJobClick = useCallback((jobId: string) => {
     if (showActions === jobId) {
       setShowActions(null);
     } else {
       router.push(`/jobs/${jobId}`);
     }
-  };
+  }, [showActions, router]);
 
-  const toggleActions = (e: React.MouseEvent, jobId: string) => {
+  const toggleActions = useCallback((e: React.MouseEvent, jobId: string) => {
     e.stopPropagation();
     setShowActions(showActions === jobId ? null : jobId);
-  };
+  }, [showActions]);
 
-  const handleDeleteClick = (e: React.MouseEvent, jobId: string) => {
+  const handleDeleteClick = useCallback((e: React.MouseEvent, jobId: string) => {
     e.stopPropagation();
+    setShowActions(null);
     setJobToDelete(jobId);
     setShowDeleteModal(true);
-    setShowActions(null);
-  };
+  }, []);
 
-  const confirmDelete = () => {
-    // In a real app, this would call an API to delete the job
+  const confirmDelete = useCallback(() => {
     if (jobToDelete) {
-      setJobs(jobs.filter(job => job.id !== jobToDelete));
-      setShowDeleteModal(false);
+      // In a real app, this would call an API
+      setJobs(currentJobs => currentJobs.filter(job => job.id !== jobToDelete));
+      console.log(`Deleted job ${jobToDelete}`);
       setJobToDelete(null);
     }
-  };
+    setShowDeleteModal(false);
+  }, [jobToDelete]);
 
-  const cancelDelete = () => {
+  const cancelDelete = useCallback(() => {
     setShowDeleteModal(false);
     setJobToDelete(null);
-  };
+  }, []);
 
-  const handleDuplicateClick = (e: React.MouseEvent, jobId: string) => {
+  const handleDuplicateClick = useCallback((e: React.MouseEvent, jobId: string) => {
     e.stopPropagation();
+    setShowActions(null);
     
     // Find the job to duplicate
     const jobToDuplicate = jobs.find(job => job.id === jobId);
+    if (!jobToDuplicate) return;
     
-    if (jobToDuplicate) {
-      // Create a new job ID
-      const newJobId = 'JOB' + Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-      
-      // Clone the job with a new ID and name
-      const duplicatedJob: JobListItem = {
-        ...jobToDuplicate,
-        id: newJobId,
-        name: `${jobToDuplicate.name} (Copy)`,
-        status: 'active', // Always set duplicated jobs to active status
-        date: new Date().toISOString().split('T')[0]
-      };
-      
-      // Add to jobs list
-      setJobs([duplicatedJob, ...jobs]);
-    }
+    // Create a new job based on the selected one
+    const newJob: JobListItem = {
+      ...jobToDuplicate,
+      id: `AAB${(Math.floor(Math.random() * 9000) + 1000).toString()}`, // Generate new ID
+      name: `Copy of ${jobToDuplicate.name}`
+    };
     
-    setShowActions(null);
-  };
+    // Add the new job to the list using functional update to avoid stale state
+    setJobs(currentJobs => [...currentJobs, newJob]);
+    console.log(`Duplicated job ${jobId} as ${newJob.id}`);
+  }, [jobs]);
 
   return (
     <main className="container mx-auto px-4 py-6 max-w-md">
@@ -232,8 +230,22 @@ export default function JobsList() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center items-center h-40">
-          <div className="animate-pulse text-primary-600">Loading jobs...</div>
+        <div className="space-y-4">
+          {[...Array(5)].map((_, index) => (
+            <div key={index} className="card p-4">
+              <div className="animate-pulse flex items-start">
+                <div className="w-12 h-12 bg-gray-200 rounded-md"></div>
+                <div className="ml-3 flex-1">
+                  <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded w-1/2 mb-2"></div>
+                  <div className="flex justify-between items-center mt-2">
+                    <div className="h-2 bg-gray-200 rounded w-1/4"></div>
+                    <div className="h-2 bg-gray-200 rounded w-1/4"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       ) : filteredJobs.length === 0 ? (
         <div className="card p-6 text-center">
@@ -244,10 +256,10 @@ export default function JobsList() {
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredJobs.map((job) => (
+          {filteredJobs.slice(0, 50).map((job) => (
             <div
               key={job.id}
-              className="card flex items-start p-4 hover:bg-gray-50 transition-colors relative"
+              className="card flex items-start p-4 hover:bg-gray-50 transition-colors relative will-change-transform"
               onClick={() => handleJobClick(job.id)}
             >
               <div className="w-12 h-12 bg-primary-100 rounded-md flex items-center justify-center text-primary-800 font-medium">
@@ -261,6 +273,7 @@ export default function JobsList() {
                     <button 
                       onClick={(e) => toggleActions(e, job.id)}
                       className="text-gray-500 hover:text-gray-700 p-1"
+                      aria-label="Job actions"
                     >
                       <FaEllipsisV />
                     </button>
