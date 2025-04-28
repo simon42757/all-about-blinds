@@ -80,7 +80,10 @@ export interface CostSummary {
   profitRate: number;
   total: number;
   additionalCosts: AdditionalCost[];
-  documentDate?: string; // Custom date for quotes, invoices and receipts
+  documentDate?: string; // Legacy field - being replaced by specific date fields
+  quoteDate?: string; // Date for quote documents
+  invoiceDate?: string; // Date for invoice documents
+  receiptDate?: string; // Date for receipt/sales documents
 }
 
 export interface AdditionalCost {
@@ -139,7 +142,10 @@ export interface CostSummaryFormState {
   fastTrack: number;
   vatRate: number;
   profitRate: number;
-  documentDate: string; // Custom date for documents
+  documentDate?: string; // Legacy field
+  quoteDate: string; // Date for quote documents
+  invoiceDate: string; // Date for invoice documents
+  receiptDate: string; // Date for receipt/sales documents
   additionalCosts: {
     description: string;
     amount: number;
