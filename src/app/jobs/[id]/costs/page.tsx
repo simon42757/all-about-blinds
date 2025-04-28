@@ -135,6 +135,15 @@ export default function CostCalculator() {
       icon: <FaFilePdf />
     },
     {
+      id: 'job-envelope',
+      title: 'Job Envelope',
+      description: 'Generate PDF envelope with client address',
+      color: 'text-purple-600',
+      text: 'PDF',
+      type: 'pdf',
+      icon: <FaFilePdf />
+    },
+    {
       id: 'job-summary',
       title: 'Job Summary',
       description: 'Export all job data to Excel spreadsheet',
@@ -147,7 +156,7 @@ export default function CostCalculator() {
       id: 'sales-report',
       title: 'Sales Report',
       description: 'View sales performance charts and metrics',
-      color: 'text-purple-600',
+      color: 'text-amber-600',
       text: 'Chart',
       type: 'chart',
       icon: <FaChartBar />
@@ -259,12 +268,16 @@ export default function CostCalculator() {
     // Set appropriate message and title based on report type
     switch(reportId) {
       case 'job-quotes':
-        title = 'Generate Quotes Report';
-        message = 'This will generate a PDF document containing quotes for this job using the Quote Date.';
+        title = 'Generate Quote';
+        message = 'This will generate a PDF document containing the quote for this job using the Quote Date.';
         break;
       case 'job-invoices':
-        title = 'Generate Invoices Report';
-        message = 'This will generate a PDF document containing invoices for this job using the Invoice Date.';
+        title = 'Generate Invoice';
+        message = 'This will generate a PDF document containing the invoice for this job using the Invoice Date.';
+        break;
+      case 'job-envelope':
+        title = 'Generate Envelope';
+        message = 'This will generate a PDF envelope with the client address for mailing documents.';
         break;
       case 'job-summary':
         title = 'Generate Job Summary';
@@ -295,6 +308,14 @@ export default function CostCalculator() {
         case 'job-invoices':
           dateToUse = job.costSummary.invoiceDate || dateToUse;
           break;
+        case 'job-envelope':
+          // For envelopes, use the most recent document date
+          dateToUse = job.costSummary.quoteDate || 
+                      job.costSummary.invoiceDate || 
+                      job.costSummary.receiptDate || 
+                      dateToUse;
+          break;  
+        case 'job-summary':
         case 'sales-report':
           dateToUse = job.costSummary.receiptDate || dateToUse;
           break;
@@ -303,10 +324,31 @@ export default function CostCalculator() {
       }
     }
     
-    console.log(`Using date: ${dateToUse} for report: ${modalInfo.reportId}`);
-    // Implementation would go here in production
+    // Navigate to appropriate page or generate report
     setModalInfo({ ...modalInfo, isOpen: false });
-    alert(`Generating ${modalInfo.title} with date ${dateToUse}...`);
+    
+    // Route to appropriate report page or generate immediately
+    switch(modalInfo.reportId) {
+      case 'job-quotes':
+        router.push(`/jobs/${jobId}/quote`);
+        break;
+      case 'job-invoices':
+        router.push(`/jobs/${jobId}/invoice`);
+        break;
+      case 'job-envelope':
+        router.push(`/jobs/${jobId}/envelope`);
+        break;
+      case 'job-summary':
+        // Would connect to an API to generate Excel file
+        alert(`Generating ${modalInfo.title} with date ${dateToUse}...`);
+        break;
+      case 'sales-report':
+        // Would show charts or analytics
+        alert(`Generating ${modalInfo.title} with date ${dateToUse}...`);
+        break;
+      default:
+        alert(`Generating ${modalInfo.title}...`);
+    }
   };
   
   const cancelGeneration = () => {
