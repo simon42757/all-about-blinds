@@ -325,6 +325,9 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
       doc.setFillColor(0, 23, 85); // Navy blue
       doc.rect(0, 0, 210, 40, 'F');
       
+      // Get company details before using them
+      const companyDetails = getCompanyDetails();
+      
       // Try to get the company logo
       const logo = getCompanyLogo();
       if (logo) {
@@ -674,6 +677,9 @@ export const generateJobReceiptPdf = async (job: Job): Promise<any> => {
       // Add logo and header
       doc.setFillColor(0, 23, 85); // Navy blue
       doc.rect(0, 0, 210, 40, 'F');
+      
+      // Get company details before using them
+      const companyDetails = getCompanyDetails();
       
       // Try to get the company logo
       const logo = getCompanyLogo();
