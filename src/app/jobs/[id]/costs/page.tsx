@@ -88,6 +88,7 @@ const validationSchema = Yup.object({
   quoteDate: Yup.string(),
   invoiceDate: Yup.string(),
   receiptDate: Yup.string(),
+  documentDate: Yup.string(),
   additionalCosts: Yup.array().of(
     Yup.object({
       description: Yup.string().required('Description is required'),

@@ -10,20 +10,25 @@
 export const getCompanyDetails = () => {
   if (typeof window === 'undefined') return defaultCompanyDetails;
   
-  return {
-    name: localStorage.getItem('company_name') || defaultCompanyDetails.name,
-    address: localStorage.getItem('company_address') || defaultCompanyDetails.address,
-    city: localStorage.getItem('company_city') || defaultCompanyDetails.city,
-    postcode: localStorage.getItem('company_postcode') || defaultCompanyDetails.postcode,
-    phone: localStorage.getItem('company_phone') || defaultCompanyDetails.phone,
-    email: localStorage.getItem('company_email') || defaultCompanyDetails.email,
-    website: localStorage.getItem('company_website') || defaultCompanyDetails.website,
-    vatNumber: localStorage.getItem('company_vat_number') || defaultCompanyDetails.vatNumber,
-    registrationNumber: localStorage.getItem('company_registration_number') || defaultCompanyDetails.registrationNumber,
-    bankName: localStorage.getItem('company_bank_name') || defaultCompanyDetails.bankName,
-    accountNumber: localStorage.getItem('company_account_number') || defaultCompanyDetails.accountNumber,
-    sortCode: localStorage.getItem('company_sort_code') || defaultCompanyDetails.sortCode
-  };
+  try {
+    return {
+      name: localStorage.getItem('company_name') || defaultCompanyDetails.name,
+      address: localStorage.getItem('company_address') || defaultCompanyDetails.address,
+      city: localStorage.getItem('company_city') || defaultCompanyDetails.city,
+      postcode: localStorage.getItem('company_postcode') || defaultCompanyDetails.postcode,
+      phone: localStorage.getItem('company_phone') || defaultCompanyDetails.phone,
+      email: localStorage.getItem('company_email') || defaultCompanyDetails.email,
+      website: localStorage.getItem('company_website') || defaultCompanyDetails.website,
+      vatNumber: localStorage.getItem('company_vat_number') || defaultCompanyDetails.vatNumber,
+      registrationNumber: localStorage.getItem('company_registration_number') || defaultCompanyDetails.registrationNumber,
+      bankName: localStorage.getItem('company_bank_name') || defaultCompanyDetails.bankName,
+      accountNumber: localStorage.getItem('company_account_number') || defaultCompanyDetails.accountNumber,
+      sortCode: localStorage.getItem('company_sort_code') || defaultCompanyDetails.sortCode
+    };
+  } catch (error) {
+    console.error('Error retrieving company details from localStorage:', error);
+    return defaultCompanyDetails;
+  }
 };
 
 // Default company details to use if nothing is stored in localStorage

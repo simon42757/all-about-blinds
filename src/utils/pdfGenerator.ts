@@ -36,8 +36,27 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
   
   const doc = new jsPDF();
   
-  // Get company details
-  const companyDetails = getCompanyDetails();
+  // Get company details - safely, with a fallback to default values if anything goes wrong
+  let companyDetails;
+  try {
+    companyDetails = getCompanyDetails();
+  } catch (e) {
+    console.error('Error getting company details:', e);
+    companyDetails = {
+      name: 'All About Blinds',
+      address: '123 Blind Street',
+      city: 'Blindville',
+      postcode: 'BL1 2ND',
+      phone: '01234 567890',
+      email: 'info@allaboutblinds.com',
+      website: 'www.allaboutblinds.com',
+      vatNumber: 'GB123456789',
+      registrationNumber: '12345678',
+      bankName: 'Blind Bank',
+      accountNumber: '12345678',
+      sortCode: '12-34-56'
+    };
+  }
   
   // Add logo and header
   doc.setFillColor(0, 23, 85); // Navy blue
@@ -86,10 +105,15 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
   doc.text(`Quote Reference: ${job.id}`, 20, 70);
   
   // Use custom quote date if available, otherwise use current date
-  const displayDate = job.costSummary.quoteDate 
-    ? new Date(job.costSummary.quoteDate).toLocaleDateString('en-GB')
-    : new Date().toLocaleDateString('en-GB');
-  doc.text(`Date: ${displayDate}`, 20, 77);
+  try {
+    const displayDate = job.costSummary?.quoteDate 
+      ? new Date(job.costSummary.quoteDate).toLocaleDateString('en-GB')
+      : new Date().toLocaleDateString('en-GB');
+    doc.text(`Date: ${displayDate}`, 20, 77);
+  } catch (e) {
+    console.error('Error formatting quote date:', e);
+    doc.text(`Date: ${new Date().toLocaleDateString('en-GB')}`, 20, 77);
+  }
   
   // Add company contact details at the top right
   if (companyDetails.phone || companyDetails.email || companyDetails.website) {
