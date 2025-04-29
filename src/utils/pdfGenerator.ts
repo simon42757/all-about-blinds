@@ -1,6 +1,7 @@
 // PDF Generation Utility using dynamic imports to ensure client-side only execution
 import { Job } from '@/types';
 import { getCompanyLogo } from './logoUtils';
+import { getCompanyDetails } from './companyUtils';
 
 // Check if we're on the client side
 const isClient = typeof window !== 'undefined';
@@ -35,6 +36,9 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
   
   const doc = new jsPDF();
   
+  // Get company details
+  const companyDetails = getCompanyDetails();
+  
   // Add logo and header
   doc.setFillColor(0, 23, 85); // Navy blue
   doc.rect(0, 0, 210, 40, 'F');
@@ -53,14 +57,23 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
     }
   }
   
-  doc.setTextColor(255, 0, 127); // Pink
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(16);
-  doc.text('all about...', 20, 20);
-  
-  doc.setTextColor(255, 255, 255); // White
-  doc.setFontSize(28);
-  doc.text('blinds', 20, 30);
+  // If company name is set, use it instead of the default
+  if (companyDetails.name && companyDetails.name !== 'All About Blinds') {
+    doc.setTextColor(255, 255, 255); // White
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.text(companyDetails.name, 20, 25);
+  } else {
+    // Default branding
+    doc.setTextColor(255, 0, 127); // Pink
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('all about...', 20, 20);
+    
+    doc.setTextColor(255, 255, 255); // White
+    doc.setFontSize(28);
+    doc.text('blinds', 20, 30);
+  }
   
   // Add document title
   doc.setTextColor(0, 23, 85); // Navy
@@ -72,11 +85,32 @@ export const generateJobQuotePdf = async (job: Job): Promise<any> => {
   doc.setFont('helvetica', 'normal');
   doc.text(`Quote Reference: ${job.id}`, 20, 70);
   
-  // Use custom document date if available, otherwise use current date
-  const displayDate = job.costSummary.documentDate 
-    ? new Date(job.costSummary.documentDate).toLocaleDateString('en-GB')
+  // Use custom quote date if available, otherwise use current date
+  const displayDate = job.costSummary.quoteDate 
+    ? new Date(job.costSummary.quoteDate).toLocaleDateString('en-GB')
     : new Date().toLocaleDateString('en-GB');
   doc.text(`Date: ${displayDate}`, 20, 77);
+  
+  // Add company contact details at the top right
+  if (companyDetails.phone || companyDetails.email || companyDetails.website) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    let contactY = 70;
+    
+    if (companyDetails.phone) {
+      doc.text(`Phone: ${companyDetails.phone}`, 190, contactY, { align: 'right' });
+      contactY += 5;
+    }
+    
+    if (companyDetails.email) {
+      doc.text(`Email: ${companyDetails.email}`, 190, contactY, { align: 'right' });
+      contactY += 5;
+    }
+    
+    if (companyDetails.website) {
+      doc.text(`Web: ${companyDetails.website}`, 190, contactY, { align: 'right' });
+    }
+  }
   
   // Add client details section
   doc.setFillColor(240, 240, 240);
@@ -281,14 +315,23 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
         }
       }
       
-      doc.setTextColor(255, 0, 127); // Pink
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(16);
-      doc.text('all about...', 20, 20);
-      
-      doc.setTextColor(255, 255, 255); // White
-      doc.setFontSize(28);
-      doc.text('blinds', 20, 30);
+      // If company name is set, use it instead of the default
+      if (companyDetails.name && companyDetails.name !== 'All About Blinds') {
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(22);
+        doc.text(companyDetails.name, 20, 25);
+      } else {
+        // Default branding
+        doc.setTextColor(255, 0, 127); // Pink
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('all about...', 20, 20);
+        
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFontSize(28);
+        doc.text('blinds', 20, 30);
+      }
       
       // Add document title
       doc.setTextColor(0, 23, 85); // Navy
@@ -320,6 +363,28 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
         : new Date().toLocaleDateString('en-GB');
       doc.text(`Date: ${displayDate}`, 20, 80);
       doc.text(`Due Date: ${new Date(Date.now() + 30*24*60*60*1000).toLocaleDateString('en-GB')}`, 20, 84);
+      
+      // Add company contact details at the top right
+      const companyDetails = getCompanyDetails();
+      if (companyDetails.phone || companyDetails.email || companyDetails.website) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        let contactY = 70;
+        
+        if (companyDetails.phone) {
+          doc.text(`Phone: ${companyDetails.phone}`, 190, contactY, { align: 'right' });
+          contactY += 5;
+        }
+        
+        if (companyDetails.email) {
+          doc.text(`Email: ${companyDetails.email}`, 190, contactY, { align: 'right' });
+          contactY += 5;
+        }
+        
+        if (companyDetails.website) {
+          doc.text(`Web: ${companyDetails.website}`, 190, contactY, { align: 'right' });
+        }
+      }
       
       // Add client details section
       doc.setFillColor(240, 240, 240);
@@ -487,13 +552,13 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
       // Payment details
       doc.setTextColor(0, 23, 85); // Navy
       doc.setFontSize(11);
-      doc.text('PAYMENT DETAILS', 20, finalY + 10);
+      doc.text('PAYMENT DETAILS', 20, finalY + 25);
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
-      doc.text('Bank: NatWest', 20, finalY + 18);
-      doc.text('Account Name: All About Blinds', 20, finalY + 25);
-      doc.text('Sort Code: 60-21-34', 20, finalY + 32);
-      doc.text('Account No: 59371234', 20, finalY + 39);
+      doc.text(`Bank: ${companyDetails.bankName || 'Bank details not provided'}`, 20, finalY + 32);
+      doc.text(`Account Name: ${companyDetails.name || 'All About Blinds'}`, 20, finalY + 37);
+      doc.text(`Sort Code: ${companyDetails.sortCode || 'Not provided'}`, 20, finalY + 42);
+      doc.text(`Account Number: ${companyDetails.accountNumber || 'Not provided'}`, 20, finalY + 47);
       doc.text('Payment Terms: 30 days from invoice date', 20, finalY + 46);
       
       // Add footer
@@ -520,14 +585,23 @@ export const generateJobInvoicePdf = async (job: Job): Promise<any> => {
       doc.setFillColor(0, 23, 85); // Navy blue
       doc.rect(0, 0, 210, 40, 'F');
       
-      doc.setTextColor(255, 0, 127); // Pink
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(16);
-      doc.text('all about...', 20, 20);
-      
-      doc.setTextColor(255, 255, 255); // White
-      doc.setFontSize(28);
-      doc.text('blinds', 20, 30);
+      // If company name is set, use it instead of the default
+      if (companyDetails.name && companyDetails.name !== 'All About Blinds') {
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(22);
+        doc.text(companyDetails.name, 20, 25);
+      } else {
+        // Default branding
+        doc.setTextColor(255, 0, 127); // Pink
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('all about...', 20, 20);
+        
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFontSize(28);
+        doc.text('blinds', 20, 30);
+      }
       
       // Add error message
       doc.setTextColor(0, 0, 0);
@@ -591,14 +665,23 @@ export const generateJobReceiptPdf = async (job: Job): Promise<any> => {
         }
       }
       
-      doc.setTextColor(255, 0, 127); // Pink
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(16);
-      doc.text('all about...', 20, 20);
-      
-      doc.setTextColor(255, 255, 255); // White
-      doc.setFontSize(28);
-      doc.text('blinds', 20, 30);
+      // If company name is set, use it instead of the default
+      if (companyDetails.name && companyDetails.name !== 'All About Blinds') {
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(22);
+        doc.text(companyDetails.name, 20, 25);
+      } else {
+        // Default branding
+        doc.setTextColor(255, 0, 127); // Pink
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('all about...', 20, 20);
+        
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFontSize(28);
+        doc.text('blinds', 20, 30);
+      }
       
       // Add document title
       doc.setTextColor(0, 23, 85); // Navy
@@ -745,14 +828,23 @@ export const generateJobReceiptPdf = async (job: Job): Promise<any> => {
       doc.setFillColor(0, 23, 85); // Navy blue
       doc.rect(0, 0, 210, 40, 'F');
       
-      doc.setTextColor(255, 0, 127); // Pink
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(16);
-      doc.text('all about...', 20, 20);
-      
-      doc.setTextColor(255, 255, 255); // White
-      doc.setFontSize(28);
-      doc.text('blinds', 20, 30);
+      // If company name is set, use it instead of the default
+      if (companyDetails.name && companyDetails.name !== 'All About Blinds') {
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(22);
+        doc.text(companyDetails.name, 20, 25);
+      } else {
+        // Default branding
+        doc.setTextColor(255, 0, 127); // Pink
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('all about...', 20, 20);
+        
+        doc.setTextColor(255, 255, 255); // White
+        doc.setFontSize(28);
+        doc.text('blinds', 20, 30);
+      }
       
       // Add error message
       doc.setTextColor(0, 0, 0);

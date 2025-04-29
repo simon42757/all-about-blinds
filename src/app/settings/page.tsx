@@ -19,6 +19,21 @@ export default function Settings() {
   const [showSaveConfirmation, setShowSaveConfirmation] = useState(false);
   const [logo, setLogo] = useState<string | null>(null);
   const [logoUploading, setLogoUploading] = useState(false);
+  
+  // Company details state
+  const [companyName, setCompanyName] = useState('');
+  const [companyAddress, setCompanyAddress] = useState('');
+  const [companyCity, setCompanyCity] = useState('');
+  const [companyPostcode, setCompanyPostcode] = useState('');
+  const [companyPhone, setCompanyPhone] = useState('');
+  const [companyEmail, setCompanyEmail] = useState('');
+  const [companyWebsite, setCompanyWebsite] = useState('');
+  const [companyVatNumber, setCompanyVatNumber] = useState('');
+  const [companyRegistrationNumber, setCompanyRegistrationNumber] = useState('');
+  const [companyBankName, setCompanyBankName] = useState('');
+  const [companyAccountNumber, setCompanyAccountNumber] = useState('');
+  const [companySortCode, setCompanySortCode] = useState('');
+  
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { logout } = useAuth();
   const router = useRouter();
@@ -86,17 +101,45 @@ export default function Settings() {
     }
   };
 
-  // Load saved logo on component mount
+  // Load saved logo and company details on component mount
   useEffect(() => {
+    // Load logo
     const savedLogo = localStorage.getItem('company_logo');
     if (savedLogo) {
       setLogo(savedLogo);
     }
+    
+    // Load company details
+    setCompanyName(localStorage.getItem('company_name') || '');
+    setCompanyAddress(localStorage.getItem('company_address') || '');
+    setCompanyCity(localStorage.getItem('company_city') || '');
+    setCompanyPostcode(localStorage.getItem('company_postcode') || '');
+    setCompanyPhone(localStorage.getItem('company_phone') || '');
+    setCompanyEmail(localStorage.getItem('company_email') || '');
+    setCompanyWebsite(localStorage.getItem('company_website') || '');
+    setCompanyVatNumber(localStorage.getItem('company_vat_number') || '');
+    setCompanyRegistrationNumber(localStorage.getItem('company_registration_number') || '');
+    setCompanyBankName(localStorage.getItem('company_bank_name') || '');
+    setCompanyAccountNumber(localStorage.getItem('company_account_number') || '');
+    setCompanySortCode(localStorage.getItem('company_sort_code') || '');
   }, []);
   
   const handleSaveSettings = () => {
-    // Save other settings
-    // This is just a placeholder since we don't have actual settings storage yet
+    // Save company details to localStorage
+    localStorage.setItem('company_name', companyName);
+    localStorage.setItem('company_address', companyAddress);
+    localStorage.setItem('company_city', companyCity);
+    localStorage.setItem('company_postcode', companyPostcode);
+    localStorage.setItem('company_phone', companyPhone);
+    localStorage.setItem('company_email', companyEmail);
+    localStorage.setItem('company_website', companyWebsite);
+    localStorage.setItem('company_vat_number', companyVatNumber);
+    localStorage.setItem('company_registration_number', companyRegistrationNumber);
+    localStorage.setItem('company_bank_name', companyBankName);
+    localStorage.setItem('company_account_number', companyAccountNumber);
+    localStorage.setItem('company_sort_code', companySortCode);
+    
+    // Show confirmation
     setShowSaveConfirmation(true);
   };
   
@@ -435,6 +478,213 @@ export default function Settings() {
                 className="input-field pl-10" 
                 defaultValue="25"
               />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="card mb-6">
+        <h2 className="section-title flex items-center">
+          <FaStore className="mr-2" /> Business Settings
+        </h2>
+        
+        <div className="mt-4 space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-medium text-gray-900">Dark Mode</h3>
+              <p className="text-sm text-gray-500">Enable dark theme for the app</p>
+            </div>
+            <button 
+              onClick={() => setDarkMode(!darkMode)}
+              className="text-xl"
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? 
+                <FaToggleOn className="text-primary-600" /> : 
+                <FaToggleOff className="text-gray-400" />
+              }
+            </button>
+          </div>
+          
+          <hr className="my-4 border-gray-200" />
+          
+          <div>
+            <h3 className="font-medium text-gray-900 mb-3">Company Details</h3>
+            <p className="text-sm text-gray-500 mb-4">This information will be used on quotes, invoices, and receipts</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <div>
+                <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Name
+                </label>
+                <input 
+                  type="text" 
+                  id="companyName"
+                  className="input-field" 
+                  placeholder="Your Business Name"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyPhone" className="block text-sm font-medium text-gray-700 mb-1">
+                  Phone Number
+                </label>
+                <input 
+                  type="text" 
+                  id="companyPhone"
+                  className="input-field" 
+                  placeholder="Business Phone"
+                  value={companyPhone}
+                  onChange={(e) => setCompanyPhone(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
+                </label>
+                <input 
+                  type="email" 
+                  id="companyEmail"
+                  className="input-field" 
+                  placeholder="Business Email"
+                  value={companyEmail}
+                  onChange={(e) => setCompanyEmail(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyWebsite" className="block text-sm font-medium text-gray-700 mb-1">
+                  Website
+                </label>
+                <input 
+                  type="text" 
+                  id="companyWebsite"
+                  className="input-field" 
+                  placeholder="Business Website"
+                  value={companyWebsite}
+                  onChange={(e) => setCompanyWebsite(e.target.value)}
+                />
+              </div>
+              
+              <div className="md:col-span-2">
+                <label htmlFor="companyAddress" className="block text-sm font-medium text-gray-700 mb-1">
+                  Street Address
+                </label>
+                <input 
+                  type="text" 
+                  id="companyAddress"
+                  className="input-field" 
+                  placeholder="Business Street Address"
+                  value={companyAddress}
+                  onChange={(e) => setCompanyAddress(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyCity" className="block text-sm font-medium text-gray-700 mb-1">
+                  City/Town
+                </label>
+                <input 
+                  type="text" 
+                  id="companyCity"
+                  className="input-field" 
+                  placeholder="City/Town"
+                  value={companyCity}
+                  onChange={(e) => setCompanyCity(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyPostcode" className="block text-sm font-medium text-gray-700 mb-1">
+                  Postcode
+                </label>
+                <input 
+                  type="text" 
+                  id="companyPostcode"
+                  className="input-field" 
+                  placeholder="Postcode"
+                  value={companyPostcode}
+                  onChange={(e) => setCompanyPostcode(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyVatNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                  VAT Number (if applicable)
+                </label>
+                <input 
+                  type="text" 
+                  id="companyVatNumber"
+                  className="input-field" 
+                  placeholder="VAT Number"
+                  value={companyVatNumber}
+                  onChange={(e) => setCompanyVatNumber(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyRegistrationNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                  Company Registration Number
+                </label>
+                <input 
+                  type="text" 
+                  id="companyRegistrationNumber"
+                  className="input-field" 
+                  placeholder="Registration Number"
+                  value={companyRegistrationNumber}
+                  onChange={(e) => setCompanyRegistrationNumber(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <h3 className="font-medium text-gray-900 mt-6 mb-3">Banking Details</h3>
+            <p className="text-sm text-gray-500 mb-4">These details will appear on invoices</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="companyBankName" className="block text-sm font-medium text-gray-700 mb-1">
+                  Bank Name
+                </label>
+                <input 
+                  type="text" 
+                  id="companyBankName"
+                  className="input-field" 
+                  placeholder="Bank Name"
+                  value={companyBankName}
+                  onChange={(e) => setCompanyBankName(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companyAccountNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                  Account Number
+                </label>
+                <input 
+                  type="text" 
+                  id="companyAccountNumber"
+                  className="input-field" 
+                  placeholder="Account Number"
+                  value={companyAccountNumber}
+                  onChange={(e) => setCompanyAccountNumber(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="companySortCode" className="block text-sm font-medium text-gray-700 mb-1">
+                  Sort Code
+                </label>
+                <input 
+                  type="text" 
+                  id="companySortCode"
+                  className="input-field" 
+                  placeholder="00-00-00"
+                  value={companySortCode}
+                  onChange={(e) => setCompanySortCode(e.target.value)}
+                />
+              </div>
             </div>
           </div>
         </div>
